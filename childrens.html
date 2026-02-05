@@ -10,178 +10,193 @@
 </head>
 <body>
 
+<!-- ================= HEADER ================= -->
 <header class="app-header">
   <h1>👶 Картка дитини</h1>
   <p>Створення та редагування</p>
 </header>
 
+<!-- ================= MAIN ================= -->
 <main class="container">
-<form id="childForm">
 
-<input type="hidden" id="childId" name="id" />
+<form id="childForm" autocomplete="off">
+  <input type="hidden" id="childId" name="id" />
 
-<!-- Дані дитини -->
-<section class="card">
-  <div class="card-header">
-    <h2>🧒 Дані дитини</h2>
-    <button type="button" class="search-btn" id="openSearchBtn">🔍</button>
-  </div>
+  <!-- ===== ДАНІ ДИТИНИ ===== -->
+  <section class="card">
+    <div class="card-header">
+      <h2>🧒 Дані дитини</h2>
+      <button type="button" id="openSearchBtn" class="search-btn" title="Пошук дитини">
+        🔍
+      </button>
+    </div>
 
-  <div class="grid">
-    <input name="last_name" placeholder="Прізвище" required />
-    <input name="first_name" placeholder="Ім'я" required />
-    <input name="middle_name" placeholder="По батькові" />
+    <div class="grid">
+      <input type="text" name="last_name" placeholder="Прізвище" required />
+      <input type="text" name="first_name" placeholder="Імʼя" required />
+      <input type="text" name="middle_name" placeholder="По батькові" />
 
-    <select name="gender">
-      <option value="">Стать</option>
-      <option value="чоловіча">Чоловіча</option>
-      <option value="жіноча">Жіноча</option>
-    </select>
+      <select name="gender">
+        <option value="">Стать</option>
+        <option value="чоловіча">Чоловіча</option>
+        <option value="жіноча">Жіноча</option>
+      </select>
 
-    <label class="field">
-      <span>Дата народження</span>
-      <input type="date" name="birth_date" required />
-    </label>
+      <label class="field">
+        <span>Дата народження</span>
+        <input type="date" name="birth_date" required />
+      </label>
 
-    <input
-      name="birth_certificate"
-      placeholder="Свідоцтво про народження (серія / номер)"
-    />
-  </div>
-</section>
+      <input
+        type="text"
+        name="birth_certificate"
+        placeholder="Свідоцтво про народження (серія / номер)"
+      />
+    </div>
+  </section>
 
-    <!-- Адреса -->
-    <section class="card">
-      <h2>🏠 Адреса</h2>
-      <div class="grid">
-        <input type="text" name="settlement" placeholder="Населений пункт" />
-        <input type="text" name="street" placeholder="Вулиця" />
-        <input type="text" name="house" placeholder="Будинок" />
-        <input type="text" name="apartment" placeholder="Квартира" />
-      </div>
-    </section>
+  <!-- ===== АДРЕСА ===== -->
+  <section class="card">
+    <h2>🏠 Адреса</h2>
+    <div class="grid">
+      <input type="text" name="settlement" placeholder="Населений пункт" />
+      <input type="text" name="street" placeholder="Вулиця" />
+      <input type="text" name="house" placeholder="Будинок" />
+      <input type="text" name="apartment" placeholder="Квартира" />
+    </div>
+  </section>
 
-    <!-- Статус -->
-    <section class="card">
-      <h2>📅 Статус перебування</h2>
-      <div class="grid">
-        <label class="field">
-          <span>Дата зарахування</span>
-          <input type="date" name="enrolled" />
-        </label>
-        <label class="field">
-          <span>Дата вибуття</span>
-          <input type="date" name="withdrawn" />
-        </label>
-      </div>
-    </section>
+  <!-- ===== СТАТУС ===== -->
+  <section class="card">
+    <h2>📅 Статус перебування</h2>
+    <div class="grid">
+      <label class="field">
+        <span>Дата зарахування</span>
+        <input type="date" name="enrolled" />
+      </label>
 
-    <!-- Батьки -->
-    <section class="card">
-      <h2>👨‍👩‍👧 Батьки / опікун</h2>
-      <div class="grid">
-        <input type="text" name="parents_full_name" placeholder="ПІБ батьків" />
-        <input type="text" name="phone" placeholder="Телефон" />
-        <input type="text" name="workplace" placeholder="Місце роботи" />
-        <input type="text" name="guardian" placeholder="Опікун" />
-      </div>
-    </section>
+      <label class="field">
+        <span>Дата вибуття</span>
+        <input type="date" name="withdrawn" />
+      </label>
+    </div>
+  </section>
 
-    <!-- Соціальні категорії -->
-    <section class="card">
+  <!-- ===== БАТЬКИ ===== -->
+  <section class="card">
+    <h2>👨‍👩‍👧 Батьки / опікун</h2>
+    <div class="grid">
+      <input type="text" name="parents_full_name" placeholder="ПІБ батьків" />
+      <input type="text" name="phone" placeholder="Телефон" />
+      <input type="text" name="workplace" placeholder="Місце роботи" />
+      <input type="text" name="guardian" placeholder="Опікун" />
+    </div>
+  </section>
+
+  <!-- ===== СОЦІАЛЬНІ КАТЕГОРІЇ ===== -->
+  <section class="card">
   <h2>⭐ Соціальні категорії</h2>
 
-  <div class="checkbox-grid">
-    <label class="check-item">
-      <input type="checkbox" name="orphan">
-      <span>Сирота</span>
-    </label>
+  <div class="social-layout">
 
-    <label class="check-item">
-      <input type="checkbox" name="low_income">
-      <span>Малозабезпечений</span>
-    </label>
+    <!-- ===== ЛІВО: СОЦІАЛЬНІ ЧЕКБОКСИ ===== -->
+    <div class="social-checkboxes">
+      <label class="check-item">
+        <input type="checkbox" name="orphan" />
+        <span>Сирота</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="inclusion">
-      <span>Інклюзія</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="low_income" />
+        <span>Малозабезпечений</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="chornobyl">
-      <span>Чорнобиль</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="inclusion" />
+        <span>Інклюзія</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="ato">
-      <span>АТО / ООС</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="chornobyl" />
+        <span>Чорнобиль</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="many_children_family">
-      <span>Багатодітна сімʼя</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="ato" />
+        <span>АТО / ООС</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="idp">
-      <span>ВПО</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="many_children_family" />
+        <span>Багатодітна сімʼя</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="war_child">
-      <span>Дитина війни</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="idp" />
+        <span>ВПО</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="deprived_parental_care">
-      <span>Позбавлений піклування</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="war_child" />
+        <span>Дитина війни</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="missing_father">
-      <span>Батько зниклий безвісти</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="deprived_parental_care" />
+        <span>Позбавлений піклування</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="parents_ubd">
-      <span>Батьки УБД</span>
-    </label>
-	    <!-- Територіальне перебування -->
-    <label class="check-item">
-      <input type="checkbox" name="in_village">
-      <span>На території села</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="missing_father" />
+        <span>Батько зниклий безвісти</span>
+      </label>
 
-    <label class="check-item">
-      <input type="checkbox" name="in_ukraine">
-      <span>На території України</span>
-    </label>
+      <label class="check-item">
+        <input type="checkbox" name="parents_ubd" />
+        <span>Батьки УБД</span>
+      </label>
+    </div>
 
-    <label class="check-item">
-      <input type="checkbox" name="abroad">
-      <span>За кордоном</span>
-    </label>
+    <!-- ===== ПРАВО: ТЕРИТОРІЯ ===== -->
+    <div class="location-block">
+      <div class="location-title">📍 Територіальне перебування</div>
+
+      <label class="radio-item">
+        <input type="radio" name="location_status" value="village" />
+        <span>На території села</span>
+      </label>
+
+      <label class="radio-item">
+        <input type="radio" name="location_status" value="ukraine" />
+        <span>На території України</span>
+      </label>
+
+      <label class="radio-item">
+        <input type="radio" name="location_status" value="abroad" />
+        <span>За кордоном</span>
+      </label>
+    </div>
+
   </div>
 </section>
 
+  <!-- ===== ПРИМІТКИ ===== -->
+  <section class="card">
+    <h2>📝 Примітки</h2>
+    <textarea name="notes" placeholder="Нотатки"></textarea>
+    <textarea name="internal_note" placeholder="Службова замітка"></textarea>
+  </section>
 
-    <!-- Примітки -->
-    <section class="card">
-      <h2>📝 Примітки</h2>
-      <textarea name="notes" placeholder="Нотатки"></textarea>
-      <textarea name="internal_note" placeholder="Службова замітка"></textarea>
-    </section>
-
-    <!-- Дії -->
-    <div class="actions">
-  <button type="submit">💾 Зберегти</button>
-  <button type="reset" class="secondary">Очистити</button>
-</div>
-
+  <!-- ===== ДІЇ ===== -->
+  <div class="actions">
+    <button type="submit">💾 Зберегти</button>
+    <button type="reset" class="secondary">Очистити</button>
+  </div>
 </form>
+
 </main>
 
-<!-- 🔍 МОДАЛЬНЕ ВІКНО ПОШУКУ -->
+<!-- ================= MODAL SEARCH ================= -->
 <div id="searchModal" class="modal hidden">
   <div class="modal-content">
     <h3>🔍 Пошук дитини</h3>
@@ -197,14 +212,12 @@
     <ul id="searchResults" class="results"></ul>
 
     <div class="actions">
-		<button type="button" id="confirmBtn">ОК</button>
-		<button type="button" class="secondary" id="cancelBtn">Скасувати</button>
-	</div>
-
+      <button type="button" id="confirmBtn">ОК</button>
+      <button type="button" id="cancelBtn" class="secondary">Скасувати</button>
+    </div>
   </div>
 </div>
+
 <script src="childrens.js"></script>
 </body>
 </html>
-
-
