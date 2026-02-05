@@ -25,11 +25,44 @@
   <!-- ===== ДАНІ ДИТИНИ ===== -->
   <section class="card">
     <div class="card-header">
-      <h2>🧒 Дані дитини</h2>
-      <button type="button" id="openSearchBtn" class="search-btn" title="Пошук дитини">
-        🔍
-      </button>
-    </div>
+  <h2>🧒 Дані дитини</h2>
+
+  <div class="header-actions">
+    <button
+      type="button"
+      id="prevChildBtn"
+      class="nav-btn"
+      title="Попередня дитина"
+    >
+      ◀
+    </button>
+
+    <span id="childCounter" class="child-counter">– / –</span>
+		<span id="unsavedIndicator" class="unsaved-indicator hidden">
+			● Незбережено
+	</span>
+
+    <button
+      type="button"
+      id="nextChildBtn"
+      class="nav-btn"
+      title="Наступна дитина"
+    >
+      ▶
+    </button>
+
+    <button
+      type="button"
+      id="openSearchBtn"
+      class="search-btn"
+      title="Пошук дитини"
+    >
+      🔍
+    </button>
+  </div>
+</div>
+
+
 
     <div class="grid">
       <input type="text" name="last_name" placeholder="Прізвище" required />
@@ -123,7 +156,7 @@
 
       <label class="check-item">
         <input type="checkbox" name="ato" />
-        <span>АТО / ООС</span>
+        <span>АТО</span>
       </label>
 
       <label class="check-item">
@@ -150,6 +183,11 @@
         <input type="checkbox" name="missing_father" />
         <span>Батько зниклий безвісти</span>
       </label>
+	  
+	  <label class="check-item">
+		<input type="checkbox" name="parents_military">
+		<span>Батьки військовослужбовці</span>
+	  </label>
 
       <label class="check-item">
         <input type="checkbox" name="parents_ubd" />
