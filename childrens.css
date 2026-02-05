@@ -167,6 +167,11 @@ button.secondary {
   align-items: center;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 /* ======================================================
    SEARCH BUTTON
 ====================================================== */
@@ -342,4 +347,63 @@ button.secondary {
 
 .radio-item:last-child {
   margin-bottom: 0;
+}
+
+/* ======================================================
+   CHILD NAVIGATION BUTTONS
+====================================================== */
+
+.nav-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.nav-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--primary);
+  background: #fff;
+  color: var(--primary);
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-btn:hover {
+  background: var(--primary-soft);
+}
+
+/* ======================================================
+   CHILD NAV HEADER
+====================================================== */
+
+.child-counter {
+  font-size: 14px;
+  color: #555;
+  min-width: 60px;
+  text-align: center;
+  user-select: none;
+}
+
+.nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ======================================================
+   UNSAVED INDICATOR
+====================================================== */
+
+.unsaved-indicator {
+  font-size: 13px;
+  color: #d97706; /* жовто-помаранчевий */
+  margin-left: 8px;
+  user-select: none;
+}
+
+.unsaved-indicator.hidden {
+  display: none;
 }
