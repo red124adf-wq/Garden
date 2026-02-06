@@ -1,69 +1,11 @@
-/* ======================================================
-   SUPABASE / AUTH (ДОДАНО)
-====================================================== */
-const SUPABASE_URL = "https://wesibzuxkytajteyejmw.supabase.co";
-const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc2lienV4a3l0YWp0ZXllam13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDUwNzIsImV4cCI6MjA4NTc4MTA3Mn0.eRymrXGUaA0HXAFEuyZwjbSJLEOnNZuG0O2ux_cyP6U"; // ← встав СВІЙ ключ
-
-// ініціалізація (глобально, без втручання в іншу логіку)
-window.supabaseClient = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_ANON_KEY
-);
-
 const authBlock = document.getElementById("authBlock");
 const appBlock = document.getElementById("app");
-
-async function checkAuth() {
-    const { data } = await window.supabaseClient.auth.getUser();
-
-    if (data?.user) {
-        authBlock?.classList.add("hidden");
-        appBlock?.classList.remove("hidden");
-    } else {
-        authBlock?.classList.remove("hidden");
-        appBlock?.classList.add("hidden");
-    }
-}
-
-// первинна перевірка
-checkAuth();
-
-// реагує на логін / логаут
-window.supabaseClient.auth.onAuthStateChange(() => {
-    checkAuth();
-});
-
-// логін
-document.getElementById("loginBtn")?.addEventListener("click", async () => {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
-
-    if (!email || !password) {
-        alert("Введіть email та пароль");
-        return;
-    }
-
-    const { error } =
-        await window.supabaseClient.auth.signInWithPassword({
-            email,
-            password
-        });
-
-    if (error) {
-        alert("Помилка входу");
-    }
-});
-
-// логаут
-document.getElementById("logoutBtn")?.addEventListener("click", async () => {
-    await window.supabaseClient.auth.signOut();
-});
 
 /* ======================================================
    ДАНІ
 ====================================================== */
 const stats = {
-	girls: 20,
+    girls: 20,
     boys: 22,
     groups: 4,
     teachers: 8
@@ -81,13 +23,21 @@ document.getElementById("totalTeachers").textContent = stats.teachers;
 ====================================================== */
 function getCurrentSchoolYear(date = new Date()) {
     const y = date.getFullYear();
-    return date.getMonth() >= 8
-        ? { from: y, to: y + 1 }
-        : { from: y - 1, to: y };
+    return date.getMonth() >= 8 ?
+        {
+            from: y,
+            to: y + 1
+        } :
+        {
+            from: y - 1,
+            to: y
+        };
 }
 
 const currentYear = getCurrentSchoolYear();
-let shownYear = { ...currentYear };
+let shownYear = {
+    ...currentYear
+};
 
 const yearText = document.getElementById("totalPromigok");
 const prevBtn = document.getElementById("prevYear");
