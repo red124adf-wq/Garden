@@ -38,8 +38,8 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-	position: relative;
-	overflow: hidden;
+    position: relative;
+    overflow: hidden;
 }
 
 /* Логотип */
@@ -58,8 +58,15 @@ body {
 }
 
 @keyframes cherryBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
 }
 
 /* ==================================================
@@ -84,7 +91,7 @@ body {
 
     color: #333;
 
-    transition: 
+    transition:
         background 0.2s ease,
         border-color 0.2s ease,
         color 0.2s ease,
@@ -137,11 +144,11 @@ body {
     background-position: center;
     background-size: cover;
     opacity: 0.12;
-	transition: opacity 0.6s ease;
+    transition: opacity 0.6s ease;
     z-index: 0;
 }
 
-.content > * {
+.content>* {
     position: relative;
     z-index: 1;
 }
@@ -215,7 +222,7 @@ h1 {
     padding: 20px;
     flex: 1;
     text-align: center;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card h3 {
@@ -228,7 +235,8 @@ h1 {
 }
 
 .card h3 {
-    min-height: 44px;      /* ⭐ КЛЮЧОВЕ */
+    min-height: 44px;
+    /* ⭐ КЛЮЧОВЕ */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -245,11 +253,13 @@ h1 {
 }
 
 .gender-stats .girls {
-    color: #e84393; /* дівчата */
+    color: #e84393;
+    /* дівчата */
 }
 
 .gender-stats .boys {
-    color: #0984e3; /* хлопці */
+    color: #0984e3;
+    /* хлопці */
 }
 
 /* ==================================================
@@ -383,44 +393,44 @@ h1 {
    СЕЗОНИ
 ================================================== */
 body {
-	background: #f4f9ff;
-	--accent: #ff9900;
+    background: #f4f9ff;
+    --accent: #ff9900;
     --sidebar-bg: #ffcc70;
     --particle: "";
-	/* fallback фон */
+    /* fallback фон */
     --bg-image: none;
 }
 
 /* 🌸 Весна */
 body.season-spring {
-	--accent: #ff6fae;
+    --accent: #ff6fae;
     --sidebar-bg: #ffd9e6;
     --particle: "🌸";
-	--bg-image: url("spring.png");
+    --bg-image: url("spring.png");
 }
 
 /* ☀️ Літо */
 body.season-summer {
-	--accent: #ffa500;
+    --accent: #ffa500;
     --sidebar-bg: #ffe08a;
     --particle: "☀️";
-	--bg-image: url("summer.png");
+    --bg-image: url("summer.png");
 }
 
 /* 🍁 Осінь */
 body.season-autumn {
-	--accent: #d2691e;
+    --accent: #d2691e;
     --sidebar-bg: #ffcf9f;
     --particle: "🍁";
-	--bg-image: url("autumn.png");
+    --bg-image: url("autumn.png");
 }
 
 /* ❄️ Зима */
 body.season-winter {
-	--accent: #6fa8ff;
+    --accent: #6fa8ff;
     --sidebar-bg: #dfefff;
     --particle: "❄️";
-	--bg-image: url("winter.png");
+    --bg-image: url("winter.png");
 }
 
 /* Застосування сезонного кольору */
@@ -446,9 +456,11 @@ body.season-winter {
         transform: translateY(0) rotate(0deg);
         opacity: 0;
     }
+
     10% {
         opacity: 1;
     }
+
     100% {
         transform: translateY(110vh) rotate(360deg);
         opacity: 0;
@@ -457,28 +469,30 @@ body.season-winter {
 
 /* Вихідні */
 .flatpickr-day.is-weekend {
-  background: #fff2f2;
-  color: #d63031;
-  font-weight: 600;
+    background: #fff2f2;
+    color: #d63031;
+    font-weight: 600;
 }
 
 /* Свята — ТІЛЬКИ КОЛІР ЦИФРИ */
 .flatpickr-day.is-holiday {
-  background: transparent !important; /* ⬅ повністю прибираємо фон */
-  color: #e67e22 !important;          /* ⬅ колір цифри */
-  font-weight: 700;
+    background: transparent !important;
+    /* ⬅ повністю прибираємо фон */
+    color: #e67e22 !important;
+    /* ⬅ колір цифри */
+    font-weight: 700;
 
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
 }
 
 /* Свято + today або selected — теж тільки цифра */
 .flatpickr-day.is-holiday.today,
 .flatpickr-day.is-holiday.selected {
-  background: transparent !important;
-  color: #e67e22 !important;
-  box-shadow: none !important;
+    background: transparent !important;
+    color: #e67e22 !important;
+    box-shadow: none !important;
 }
 
 /* ===============================
@@ -527,5 +541,5 @@ body.season-winter {
 }
 
 .hidden {
-  display: none;
+    display: none;
 }
