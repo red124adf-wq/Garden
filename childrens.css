@@ -274,27 +274,6 @@ button.secondary {
    LOCATION (RADIO GROUP)
 ====================================================== */
 
-.location-block {
-  margin-top: 18px;
-  padding: 16px;
-  border-radius: 12px;
-  background: #fafafa;
-  border: 1px solid #eee;
-}
-
-.location-title {
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #555;
-}
-
-.location-options {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 12px;
-}
-
 .radio-item {
   display: flex;
   align-items: center;
@@ -319,17 +298,6 @@ button.secondary {
 
 .radio-item span {
   font-size: 15px;
-}
-
-/* ======================================================
-   SOCIAL LAYOUT
-====================================================== */
-
-.social-layout {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 24px;
-  align-items: flex-start;
 }
 
 /* ===== ЛІВА ЧАСТИНА ===== */
@@ -406,4 +374,28 @@ button.secondary {
 
 .unsaved-indicator.hidden {
   display: none;
+}
+
+/* ======================================================
+   SOCIAL GROUPS (ЄДИНА СІТКА)
+====================================================== */
+
+.social-groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.social-group {
+  background: #fafafa;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.social-group h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+  color: var(--primary);
 }
