@@ -10,8 +10,7 @@
   <body>
     <!-- ================= HEADER ================= -->
     <header class="app-header">
-      <h1>👶 Картка дитини</h1>
-      <p>Створення та редагування</p>
+      <h1>🗂️ Картотека дітей Дар'ївськиого закладу дошкільної освіти Дар'ївської сільської ради Херсонського району Херсонської області</h1>
     </header>
     <!-- ================= MAIN ================= -->
     <main class="container">
@@ -20,7 +19,7 @@
         <!-- ===== ДАНІ ДИТИНИ ===== -->
         <section class="card">
           <div class="card-header">
-            <h2>🧒 Дані дитини</h2>
+            <h2>👶 Дані дитини</h2>
             <div class="header-actions">
               <button type="button" id="prevChildBtn" class="nav-btn" title="Попередня дитина"> ◀ </button>
               <span id="childCounter" class="child-counter">– / –</span>
@@ -43,6 +42,21 @@
               <input type="date" name="birth_date" required />
             </label>
             <input type="text" name="birth_certificate" placeholder="Свідоцтво про народження (серія / номер)" />
+			<!-- ===== НАВЧАЛЬНИЙ РІК ТА ГРУПА ===== -->
+<label class="field">
+  <span>Навчальний рік</span>
+  <select name="study_year" id="studyYearSelect">
+    <option value="">— Оберіть навчальний рік —</option>
+  </select>
+</label>
+
+<label class="field">
+  <span>Група</span>
+  <select name="group_id" id="groupSelect" disabled>
+    <option value="">— Оберіть групу —</option>
+  </select>
+</label>
+
           </div>
         </section>
         <!-- ===== АДРЕСА ===== -->
@@ -178,7 +192,6 @@
         <div class="grid">
           <input id="f_last_name" placeholder="Прізвище" />
           <input id="f_first_name" placeholder="Імʼя" />
-          <input id="f_middle_name" placeholder="По батькові" />
           <input id="f_birth_date" type="date" />
           <input id="f_certificate" placeholder="Свідоцтво" />
         </div>
