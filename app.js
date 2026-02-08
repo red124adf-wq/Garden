@@ -121,3 +121,14 @@ document.querySelectorAll(".menu-btn").forEach(btn => {
         });
     }
 });
+
+/* ======================================================
+   ПЕРЕХІД НА СТОРІНКУ ГРУП
+====================================================== */
+document.querySelectorAll(".menu-btn").forEach(btn => {
+    if (btn.textContent.includes("Групи")) {
+        btn.addEventListener("click", () => {
+            window.location.href = "groups.html";
+        });
+    }
+});
