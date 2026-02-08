@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <title>Групи — керування</title>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+  <script src="core.js"></script>
+  <script src="auth-ui.js"></script>
+
+  <link rel="stylesheet" href="groups.css" />
+</head>
+<body>
+
+<div id="app">
+
+  <div class="header">
+    <h1>Керування групами</h1>
+    <button id="openGroupsModal">+ Керувати групами</button>
+  </div>
+
+  <div class="columns">
+
+    <!-- ЛІВА КОЛОНКА -->
+    <div class="column">
+      <div class="column-header">
+  <input
+    id="leftGroupFilter"
+    type="text"
+    placeholder="Пошук групи…"
+  />
+  <select id="leftGroupSelect"></select>
+</div>
+
+      <div class="list" id="leftList"></div>
+
+      <div class="actions">
+        <button id="moveSelected">➡️ Перевести вибраних</button>
+        <button id="moveAll">➡️➡️ Перевести всіх</button>
+      </div>
+    </div>
+
+    <!-- ПРАВА КОЛОНКА -->
+    <div class="column">
+      <div class="column-header">
+  <input
+    id="rightGroupFilter"
+    type="text"
+    placeholder="Пошук групи…"
+  />
+  <select id="rightGroupSelect"></select>
+</div>
+
+      <div class="list" id="rightList"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- МОДАЛЬНЕ ВІКНО КЕРУВАННЯ ГРУПАМИ -->
+<div id="groupsModal" class="modal hidden">
+  <div class="modal-content">
+
+    <h2>Керування групами</h2>
+
+    <label style="display:block; margin-bottom:6px;">
+      Навчальний рік:
+      <select id="groupYearFilter">
+        <option value="">— Оберіть навчальний рік —</option>
+      </select>
+    </label>
+
+    <div id="groupsList"></div>
+
+    <hr />
+
+    <h3>Створити / редагувати групу</h3>
+
+    <input type="hidden" id="groupId" />
+
+    <input id="groupName" placeholder="Назва групи" />
+    <input id="yearStart" type="number" placeholder="Рік початку" />
+    <input id="yearEnd" type="number" placeholder="Рік завершення" />
+    <input id="studyStart" type="date" />
+    <input id="studyEnd" type="date" />
+
+    <div class="modal-actions">
+      <button id="saveGroup">Зберегти</button>
+      <button id="clearGroupForm">Очистити</button>
+      <button id="closeGroupsModal">Закрити</button>
+    </div>
+
+  </div>
+</div>
+
+<script src="groups.js"></script>
+</body>
+</html>
