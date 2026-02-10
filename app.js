@@ -1,72 +1,123 @@
-const authBlock = document.getElementById("authBlock");
-const appBlock = document.getElementById("app");
-
 /* ======================================================
-   ДАНІ
+   DOM
 ====================================================== */
-const stats = {
-    girls: 20,
-    boys: 22,
-    groups: 4,
-    teachers: 8
-};
+const yearText      = document.getElementById("totalPromigok");
+const totalChildren = document.getElementById("totalChildren");
+const totalGirls    = document.getElementById("totalGirls");
+const totalBoys     = document.getElementById("totalBoys");
+const totalGroups = document.getElementById("totalGroups");
 
-document.getElementById("totalGirls").textContent = stats.girls;
-document.getElementById("totalBoys").textContent = stats.boys;
-document.getElementById("totalChildren").textContent = stats.girls + stats.boys;
-document.getElementById("totalGroups").textContent = stats.groups;
-document.getElementById("totalTeachers").textContent = stats.teachers;
-
-
-/* ======================================================
-   НАВЧАЛЬНИЙ РІК
-====================================================== */
-function getCurrentSchoolYear(date = new Date()) {
-    const y = date.getFullYear();
-    return date.getMonth() >= 8 ?
-        {
-            from: y,
-            to: y + 1
-        } :
-        {
-            from: y - 1,
-            to: y
-        };
-}
-
-const currentYear = getCurrentSchoolYear();
-let shownYear = {
-    ...currentYear
-};
-
-const yearText = document.getElementById("totalPromigok");
 const prevBtn = document.getElementById("prevYear");
 const nextBtn = document.getElementById("nextYear");
 
-function renderYear() {
-    yearText.textContent = `${shownYear.from}–${shownYear.to}`;
-    nextBtn.disabled =
-        shownYear.from === currentYear.from &&
-        shownYear.to === currentYear.to;
+/* ======================================================
+   SUPABASE
+   ❗ НЕ СТВОРЮЄМО ЗАНОВО
+   ❗ ВИКОРИСТОВУЄМО ІСНУЮЧИЙ
+====================================================== */
+const supabaseClient =
+    window.supabaseClient || window.supabase;
+
+/* ======================================================
+   STATE
+====================================================== */
+let years = [];
+let currentIndex = 0;
+
+/* ======================================================
+   LOAD YEARS
+====================================================== */
+async function loadYears() {
+    const { data, error } = await supabaseClient
+        .from("report_children_by_year")
+        .select("study_start_date, study_end_date")
+        .order("study_start_date", { ascending: true });
+
+    if (error) {
+        console.error("Помилка завантаження років:", error);
+        return;
+    }
+
+    years = data;
+
+    const today = new Date();
+
+    // знайти реальний поточний навчальний рік
+    let foundIndex = years.findIndex(y => {
+        const start = new Date(y.study_start_date);
+        const end   = new Date(y.study_end_date);
+        return today >= start && today <= end;
+    });
+
+    // якщо сьогодні між роками (літо) — беремо попередній
+    if (foundIndex === -1) {
+        foundIndex = years.findIndex(y => {
+            const end = new Date(y.study_end_date);
+            return end < today;
+        });
+    }
+
+    // fallback — останній
+    currentIndex = foundIndex !== -1
+        ? foundIndex
+        : years.length - 1;
+
+    loadYearData();
 }
 
+/* ======================================================
+   LOAD YEAR DATA
+====================================================== */
+async function loadYearData() {
+    const year = years[currentIndex];
+
+    const { data, error } = await supabaseClient
+        .from("report_children_by_year")
+        .select("*")
+        .eq("study_start_date", year.study_start_date)
+        .single();
+
+    if (error) {
+        console.error("Помилка завантаження року:", error);
+        return;
+    }
+
+    const from = new Date(data.study_start_date).getFullYear();
+    const to   = new Date(data.study_end_date).getFullYear();
+
+    yearText.textContent      = `${from}–${to}`;
+    totalChildren.textContent = data.total_children;
+    totalGirls.textContent    = data.girls;
+    totalBoys.textContent     = data.boys;
+
+	loadGroupsForYear(
+		data.study_start_date,
+		data.study_end_date
+	);
+
+    prevBtn.disabled = currentIndex === 0;
+    nextBtn.disabled = currentIndex === years.length - 1;
+}
+
+/* ======================================================
+   YEAR CONTROLS
+====================================================== */
 prevBtn.onclick = () => {
-    shownYear.from--;
-    shownYear.to--;
-    renderYear();
+    if (currentIndex > 0) {
+        currentIndex--;
+        loadYearData();
+    }
 };
 
 nextBtn.onclick = () => {
-    if (nextBtn.disabled) return;
-    shownYear.from++;
-    shownYear.to++;
-    renderYear();
+    if (currentIndex < years.length - 1) {
+        currentIndex++;
+        loadYearData();
+    }
 };
 
-renderYear();
-
 /* ======================================================
-   МЕНЮ
+   MENU (як було)
 ====================================================== */
 document.querySelectorAll(".menu-btn").forEach(btn => {
     btn.onclick = () => {
@@ -77,7 +128,7 @@ document.querySelectorAll(".menu-btn").forEach(btn => {
 });
 
 /* ======================================================
-   СЕЗОНИ
+   SEASON (НЕ ЧІПАЄМО)
 ====================================================== */
 (function setSeason() {
     const m = new Date().getMonth();
@@ -92,43 +143,25 @@ document.querySelectorAll(".menu-btn").forEach(btn => {
 })();
 
 /* ======================================================
-   СЕЗОННІ ЧАСТИНКИ
+   START
 ====================================================== */
-const sidebar = document.querySelector(".sidebar");
-
-setInterval(() => {
-    const p = document.createElement("div");
-    p.className = "season-particle";
-    p.textContent = getComputedStyle(document.body)
-        .getPropertyValue("--particle")
-        .replace(/"/g, "");
-
-    p.style.left = Math.random() * (sidebar.clientWidth - 20) + "px";
-    p.style.fontSize = 14 + Math.random() * 12 + "px";
-    p.style.animationDuration = 6 + Math.random() * 6 + "s";
-
-    sidebar.appendChild(p);
-    setTimeout(() => p.remove(), 12000);
-}, 2200);
+document.addEventListener("DOMContentLoaded", loadYears);
 
 /* ======================================================
-   ПЕРЕХІД НА СТОРІНКУ ДІТЕЙ
+   LOAD GROUPS
 ====================================================== */
-document.querySelectorAll(".menu-btn").forEach(btn => {
-    if (btn.textContent.includes("Діти")) {
-        btn.addEventListener("click", () => {
-            window.location.href = "childrens.html";
-        });
-    }
-});
+async function loadGroupsForYear(studyStartDate, studyEndDate) {
+    const { data, error } = await supabaseClient
+        .from("groups")
+        .select("id")
+        .eq("study_start_date", studyStartDate)
+        .eq("study_end_date", studyEndDate);
 
-/* ======================================================
-   ПЕРЕХІД НА СТОРІНКУ ГРУП
-====================================================== */
-document.querySelectorAll(".menu-btn").forEach(btn => {
-    if (btn.textContent.includes("Групи")) {
-        btn.addEventListener("click", () => {
-            window.location.href = "groups.html";
-        });
+    if (error) {
+        console.error("Помилка завантаження груп:", error);
+        totalGroups.textContent = "—";
+        return;
     }
-});
+
+    totalGroups.textContent = data.length;
+}
