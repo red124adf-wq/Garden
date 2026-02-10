@@ -2,6 +2,7 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Групи — керування</title>
 
   <!-- Supabase + core -->
@@ -25,7 +26,7 @@
 
     <div class="header">
       <h1>📚 Керування групами</h1>
-      <button id="openGroupsModal">+ Керувати групами</button>
+      <button id="openGroupsModal" type="button">+ Керувати групами</button>
     </div>
 
     <div class="columns">
@@ -44,8 +45,8 @@
         <div class="list" id="leftList"></div>
 
         <div class="actions">
-          <button id="moveSelected">➡️ Перевести вибраних</button>
-          <button id="moveAll">➡️➡️ Перевести всіх</button>
+          <button id="moveSelected" type="button">➡️ Перевести вибраних</button>
+          <button id="moveAll" type="button">➡️➡️ Перевести всіх</button>
         </div>
       </div>
 
@@ -94,9 +95,9 @@
     <input id="studyEnd" type="date" />
 
     <div class="modal-actions">
-      <button id="saveGroup">Зберегти</button>
-      <button id="clearGroupForm">Очистити</button>
-      <button id="closeGroupsModal">Закрити</button>
+      <button id="saveGroup" type="button">Зберегти</button>
+      <button id="clearGroupForm" type="button">Очистити</button>
+      <button id="closeGroupsModal" type="button">Закрити</button>
     </div>
 
   </div>
