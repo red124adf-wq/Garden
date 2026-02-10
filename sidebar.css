@@ -1,0 +1,70 @@
+/* ======================================================
+   SIDEBAR VARIABLES
+====================================================== */
+
+:root {
+  --accent: #ff9900;
+  --sidebar-bg: #ffcc70;
+  --text-main: #4a3b2a;
+}
+
+/* ======================================================
+   SIDEBAR
+====================================================== */
+
+.sidebar {
+  position: fixed;      /* ← ГОЛОВНЕ */
+  top: 0;
+  left: 0;
+
+  width: 240px;
+  height: 100vh;
+
+  background: var(--sidebar-bg);
+  padding: 22px 18px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+/* ======================================================
+   LOGO
+====================================================== */
+
+.sidebar .logo {
+  text-align: center;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 28px;
+}
+
+/* ======================================================
+   MENU BUTTONS
+====================================================== */
+
+.sidebar .menu-btn {
+  background: #fff;
+  border: none;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: inherit;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.sidebar .menu-btn:hover {
+  background: #fff3dc;
+}
+
+.sidebar .menu-btn.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
