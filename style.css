@@ -1,243 +1,383 @@
-/* ======================================================
-   BASE / RESET
-====================================================== */
+/* ==================================================
+   BASE
+================================================== */
+:root {
+    --accent: #ff9900;
+    --sidebar-bg: #ffcc70;
+    --bg-image: none;
+}
 
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
-}
-
-:root {
-    --accent: #ff9900;
-    --bg-main: #fff4e6;
-    --card-bg: #ffffff;
-    --border-soft: #eee;
-    --text-main: #333;
-    --text-muted: #666;
+    font-family: "Segoe UI", sans-serif;
 }
 
 body {
-    background: var(--bg-main);
-    color: var(--text-main);
+    background: #f4f9ff;
+    color: #222;
 }
 
-/* ======================================================
-   APP LAYOUT
-====================================================== */
+.hidden {
+    display: none !important;
+}
 
+/* ==================================================
+   AUTH
+================================================== */
+.auth {
+    width: min(420px, 92vw);
+    margin: 9vh auto 0;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    padding: 24px;
+    display: grid;
+    gap: 12px;
+}
+
+.auth h2 {
+    text-align: center;
+    color: #374151;
+}
+
+.auth input,
+.auth button {
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    font-size: 15px;
+}
+
+.auth button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* ==================================================
+   LAYOUT
+================================================== */
 .app {
     display: flex;
     min-height: 100vh;
 }
 
-/* ======================================================
-   REPORTS CONTENT
-====================================================== */
-
-.reports {
-    flex: 1;
-    padding: 32px 40px 40px;
-    max-width: 1600px;
-    margin: 0 auto;
-}
-
-.reports h1 {
-    font-size: 26px;
-    font-weight: 700;
-    margin-bottom: 28px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
-/* ======================================================
-   FILTERS GRID — 3 COLUMNS / 2 ROWS (КЛЮЧ)
-====================================================== */
-
-.filters {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr 1.3fr;
-    grid-template-rows: auto auto; /* 🔥 ЄДИНЕ місце, де формується висота */
-    gap: 36px;
-    align-items: stretch; /* 🔥 КАРТКИ ТЯГНУТЬСЯ ПО РЯДУ */
-}
-
-/* ======================================================
-   CARD
-====================================================== */
-
-.card {
-    background: var(--card-bg);
-    border-radius: 18px;
-    padding: 24px 24px 22px;
-    box-shadow:
-        0 2px 4px rgba(0,0,0,0.05),
-        0 10px 28px rgba(0,0,0,0.08);
-}
-
-.card.compact {
-    padding: 20px 22px 18px;
-}
-
-.card h3 {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--accent);
-    margin-bottom: 14px;
-    padding-bottom: 8px;
-    border-bottom: 1px solid var(--border-soft);
-}
-
-/* ======================================================
-   INPUTS / SELECTS
-====================================================== */
-
-.card input,
-.card select {
-    width: 100%;
-    min-height: 44px;
-    padding: 10px 12px;
-    margin-bottom: 12px;
-    font-size: 14.5px;
-    border-radius: 12px;
-    border: 1px solid #ddd;
-    background: #fff;
-}
-
-.card input:last-child,
-.card select:last-child {
-    margin-bottom: 0;
-}
-
-.card input:focus,
-.card select:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(255,153,0,0.25);
-}
-
-/* ======================================================
-   OPTIONS (RADIO / CHECKBOX)
-====================================================== */
-
-.options {
-    display: grid;
-    grid-template-columns: 26px 1fr;
-    row-gap: 12px;
-    column-gap: 12px;
-    align-items: center;
-}
-
-.options.options-2col {
-    grid-template-columns: 26px 1fr 26px 1fr;
-}
-
-.option {
-    display: contents;
-}
-
-.option input {
-    justify-self: center;
-    margin: 0;
-}
-
-.option span {
-    font-size: 14.5px;
-    color: var(--text-main);
-}
-
-/* ======================================================
-   ACTIONS
-====================================================== */
-
-.actions {
-    grid-column: 1 / -1;
-    margin-top: 40px;
-    padding-top: 24px;
-    border-top: 1px solid var(--border-soft);
-    display: flex;
-    justify-content: flex-end;
-    gap: 18px;
-}
-
-.actions button {
-    min-width: 180px;
-    padding: 14px 26px;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: 14px;
-    border: none;
-    cursor: pointer;
-    transition: background 0.15s ease, box-shadow 0.15s ease;
-}
-
-#clear {
-    background: #e5e5e5;
-}
-
-#clear:hover {
-    background: #d9d9d9;
-}
-
-#generate {
-    background: var(--accent);
-    color: #fff;
-}
-
-#generate:hover {
-    background: #f08c00;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
-}
-
-/* ======================================================
-   RESPONSIVE
-====================================================== */
-
-@media (max-width: 1300px) {
-    .filters {
-        grid-template-columns: 1fr 1fr;
-        grid-template-rows: auto auto auto;
-    }
-}
-
-@media (max-width: 900px) {
-    .filters {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto;
-    }
-
-    .actions {
-        justify-content: center;
-    }
-}
-
-.divider {
-    border: none;
-    height: 1px;
-    background: var(--border-soft);
-    margin: 18px 0;
-}
-
-/* ======================================================
-   PAGE WRAPPER (SIDEBAR OFFSET)
-====================================================== */
-
-.page {
-    margin-left: 240px;   /* ← ширина sidebar */
-    flex: 1;
+.sidebar {
+    width: 230px;
+    background: var(--sidebar-bg);
+    padding: 20px;
     display: flex;
     flex-direction: column;
 }
 
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+    font-weight: 700;
+}
 
-@media (max-width: 980px) {
-    .page {
-        margin-left: 0;
+.logo-icon {
+    font-size: 28px;
+    animation: cherryBounce 3s ease-in-out infinite;
+}
+
+@keyframes cherryBounce {
+    0%,
+    100% {
+        transform: translateY(0);
     }
 
-    .reports {
-        padding: 14px 12px 20px;
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+.menu-btn {
+    background: #fff;
+    border: 2px solid transparent;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: #333;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
+}
+
+.menu-btn:hover {
+    background: color-mix(in srgb, var(--accent) 15%, #ffffff);
+    border-color: var(--accent);
+    transform: translateY(-1px);
+}
+
+.menu-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 700;
+}
+
+.content {
+    flex: 1;
+    padding: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.content::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: var(--bg-image);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    opacity: 0.1;
+    z-index: 0;
+}
+
+.content>* {
+    position: relative;
+    z-index: 1;
+}
+
+.content h1 {
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.status {
+    margin: 0 auto 14px;
+    max-width: 640px;
+    background: #eef6ff;
+    color: #1f4f87;
+    border: 1px solid #c7def8;
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.status.error {
+    background: #fff2f2;
+    color: #9f1239;
+    border-color: #fecdd3;
+}
+
+.institution-info {
+    margin: 20px 0 30px;
+    padding: 16px 20px;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 10px;
+    margin-bottom: 8px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.info-row:last-child {
+    margin-bottom: 0;
+}
+
+.info-label {
+    font-weight: 600;
+    color: #555;
+    white-space: nowrap;
+}
+
+.info-value a {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-top: 24px;
+}
+
+.card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.card h3 {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.gender-stats {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.gender-stats .girls {
+    color: #e84393;
+}
+
+.gender-stats .boys {
+    color: #0984e3;
+}
+
+.school-year-card {
+    grid-column: span 2;
+}
+
+.school-year-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-top: 10px;
+}
+
+.school-year {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.year-btn {
+    background: #fff;
+    border: 2px solid var(--accent);
+    color: var(--accent);
+    font-size: 18px;
+    font-weight: 700;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.year-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.calendar-value {
+    margin-top: 10px;
+    font-size: 24px;
+    font-weight: 700;
+    text-align: center;
+    width: 100%;
+    background: transparent;
+    border: 2px solid transparent;
+    color: var(--accent);
+}
+
+.calendar-value:hover {
+    border-color: var(--accent);
+    background: #fffaf0;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.today {
+    background: var(--accent) !important;
+    color: #fff !important;
+    border-radius: 50% !important;
+}
+
+.flatpickr-day.is-holiday {
+    background: transparent !important;
+    color: #e67e22 !important;
+    font-weight: 700;
+}
+
+.flatpickr-day.is-weekend {
+    background: #fff2f2;
+    color: #d63031;
+    font-weight: 600;
+}
+
+/* ==================================================
+   SEASONS
+================================================== */
+body.season-spring {
+    --accent: #ff6fae;
+    --sidebar-bg: #ffd9e6;
+    --bg-image: url("spring.png");
+}
+
+body.season-summer {
+    --accent: #ffa500;
+    --sidebar-bg: #ffe08a;
+    --bg-image: url("pattern.svg");
+}
+
+body.season-autumn {
+    --accent: #d2691e;
+    --sidebar-bg: #ffcf9f;
+    --bg-image: url("cherry.png");
+}
+
+body.season-winter {
+    --accent: #6fa8ff;
+    --sidebar-bg: #dfefff;
+    --bg-image: url("winter.png");
+}
+
+@media (max-width: 980px) {
+    .app {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .logo {
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .menu-btn {
+        margin-bottom: 0;
+        flex: 1 1 180px;
+    }
+
+    .school-year-card {
+        grid-column: span 1;
     }
 }
