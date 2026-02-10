@@ -1,0 +1,36 @@
+body {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+}
+
+.report-meta {
+  margin: 8px 0;
+  font-size: 14px;
+  color: #555;
+}
+
+.report-count {
+  margin-bottom: 12px;
+  font-weight: bold;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #ccc;
+  padding: 6px 8px;
+}
+
+.report-table th {
+  background: #f3f3f3;
+  text-align: left;
+}
+
+.report-table tr:nth-child(even) {
+  background: #fafafa;
+}
