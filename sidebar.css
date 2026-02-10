@@ -13,18 +13,17 @@
 ====================================================== */
 
 .sidebar {
-  position: fixed;      /* ← ГОЛОВНЕ */
+  position: fixed;
   top: 0;
   left: 0;
-
   width: 240px;
   height: 100vh;
-
   background: var(--sidebar-bg);
   padding: 22px 18px;
-
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  z-index: 100;
 }
 
 /* ======================================================
@@ -49,7 +48,6 @@
   margin-bottom: 10px;
   border-radius: 12px;
   font-size: 15px;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -67,4 +65,38 @@
   background: var(--accent);
   color: #fff;
   font-weight: 600;
+}
+
+.sidebar .menu-btn[aria-current="page"] {
+  outline: 2px solid rgba(255, 255, 255, 0.7);
+  outline-offset: 1px;
+}
+
+.sidebar .menu-btn[aria-disabled="true"] {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 980px) {
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    min-height: auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .sidebar .logo {
+    width: 100%;
+    margin-bottom: 4px;
+  }
+
+  .sidebar .menu-btn {
+    margin-bottom: 0;
+    flex: 1 1 180px;
+  }
 }

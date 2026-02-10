@@ -42,7 +42,7 @@ body {
 .container {
   width: 100%;                 /* ← КЛЮЧ */
   max-width: 1100px;           /* або 1600px, якщо хочеш */
-  margin: 30px 40px;           /* ← НЕ auto */
+  margin: 20px 24px;
   padding: 20px;
 }
 
@@ -394,8 +394,30 @@ button.secondary {
 ====================================================== */
 
 .page {
-    margin-left: 180px;   /* ← ширина sidebar */
+    margin-left: 240px;
     flex: 1;
     display: flex;
     flex-direction: column;
+}
+
+
+@media (max-width: 980px) {
+  .page {
+    margin-left: 0;
+  }
+
+  .container {
+    margin: 14px 12px;
+    padding: 12px;
+  }
+
+  .card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+  }
 }

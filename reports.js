@@ -13,9 +13,9 @@ async function initReportsPage() {
         if (!authorized) return;
     }
 
-    const supabase = window.supabaseClient;
+    const supabase = getSupabase();
     if (!supabase) {
-        alert("Supabase не ініціалізовано");
+        showError("Supabase не ініціалізовано");
         return;
     }
 
@@ -23,6 +23,18 @@ async function initReportsPage() {
     await initSchoolYears(supabase);
     initGroupSelect(supabase);
     initGenerateButton();
+    initClearButton();
+}
+
+/* ================= HELPERS ================= */
+
+function getSupabase() {
+    return window.supabaseClient || window.supabase;
+}
+
+function showError(message) {
+    console.error(message);
+    alert(`❌ ${message}`);
 }
 
 /* ================= DATE PICKERS ================= */
@@ -46,15 +58,13 @@ async function initSchoolYears(supabase) {
         .order("year_start", { ascending: false });
 
     if (error) {
-        console.error("Error loading school years:", error);
+        showError("Не вдалося завантажити навчальні роки");
         return;
     }
 
-    const years = [...new Set(
-        data.map(r => `${r.year_start}-${r.year_end}`)
-    )];
+    const years = [...new Set((data || []).map((row) => `${row.year_start}-${row.year_end}`))];
 
-    years.forEach(year => {
+    years.forEach((year) => {
         select.appendChild(createOption(year, year.replace("-", "–")));
     });
 }
@@ -92,22 +102,22 @@ function initGenerateButton() {
 function generateReport() {
     const params = new URLSearchParams();
 
-    collectInput("gender", v => params.set("gender", v));
-    collectInput("birth_from", v => params.set("birth_from", v));
-    collectInput("birth_to", v => params.set("birth_to", v));
-    collectInput("school_year", v => params.set("school_year", v));
-    collectInput("group", v => params.set("group_id", v));
-    collectInput("city", v => params.set("city", v.trim()));
+    collectInput("gender", (value) => params.set("gender", value));
+    collectInput("birth_from", (value) => params.set("birth_from", value));
+    collectInput("birth_to", (value) => params.set("birth_to", value));
+    collectInput("school_year", (value) => params.set("school_year", value));
+    collectInput("group", (value) => params.set("group_id", value));
+    collectInput("city", (value) => params.set("city", value.trim()));
 
-    collectRadio("leave", v => {
-        if (v !== "all") params.set("leave", v);
+    collectRadio("leave", (value) => {
+        if (value !== "all") params.set("leave", value);
     });
 
-    collectRadio("territory", v => params.set("territory", v));
+    collectRadio("territory", (value) => params.set("territory", value));
 
     document
         .querySelectorAll('.card input[type="checkbox"]:checked')
-        .forEach(cb => params.append("flags", cb.value));
+        .forEach((checkbox) => params.append("flags", checkbox.value));
 
     window.open(`report-view.html?${params.toString()}`, "_blank");
 }
@@ -126,11 +136,11 @@ async function loadGroupsByYear(supabase, schoolYear, select) {
         .order("name");
 
     if (error) {
-        console.error("Error loading groups:", error);
+        showError("Не вдалося завантажити групи");
         return;
     }
 
-    data.forEach(group => {
+    (data || []).forEach((group) => {
         select.appendChild(createOption(group.id, group.name));
     });
 
@@ -145,10 +155,10 @@ function resetSelect(select, placeholder) {
 }
 
 function createOption(value, label) {
-    const opt = document.createElement("option");
-    opt.value = value;
-    opt.textContent = label;
-    return opt;
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    return option;
 }
 
 function collectInput(id, handler) {
@@ -165,11 +175,10 @@ function collectRadio(name, handler) {
     }
 }
 
-// ================= CLEAR BUTTON =================
+function initClearButton() {
+    const clearBtn = document.getElementById("clear");
+    if (!clearBtn) return;
 
-const clearBtn = document.getElementById("clear");
-
-if (clearBtn) {
     clearBtn.addEventListener("click", () => {
         window.location.reload();
     });

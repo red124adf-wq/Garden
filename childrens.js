@@ -5,6 +5,12 @@
 document.addEventListener("DOMContentLoaded", async () => {
   if (!(await requireAuth())) return;
 
+  const supabase = window.supabaseClient;
+  if (!supabase) {
+    alert("Supabase не ініціалізовано");
+    return;
+  }
+
   /* ======================================================
      DOM
   ====================================================== */
@@ -41,11 +47,38 @@ document.addEventListener("DOMContentLoaded", async () => {
   let isDirty = false;
 
   /* ======================================================
+     HELPERS
+  ====================================================== */
+  function showError(text) {
+    console.error(text);
+    alert(`❌ ${text}`);
+  }
+
+  function clearForm() {
+    form.reset();
+    childIdInput.value = "";
+    resetGroupUI();
+    isDirty = false;
+    unsavedIndicator.classList.add("hidden");
+  }
+
+  /* ======================================================
      DIRTY TRACKING
   ====================================================== */
   form.addEventListener("input", () => {
     isDirty = true;
     unsavedIndicator.classList.remove("hidden");
+  });
+
+  form.addEventListener("reset", () => {
+    setTimeout(() => {
+      resetGroupUI();
+      childIdInput.value = "";
+      currentIndex = -1;
+      isDirty = false;
+      unsavedIndicator.classList.add("hidden");
+      updateNavigationUI();
+    }, 0);
   });
 
   function confirmUnsavedChanges() {
@@ -68,26 +101,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadStudyYears() {
     resetGroupUI();
 
-    const { data, error } = await window.supabaseClient
+    const { data, error } = await supabase
       .from("groups")
       .select("year_start, year_end")
       .order("year_start", { ascending: false });
 
     if (error) {
-      console.error(error);
+      showError("Не вдалося завантажити навчальні роки");
       return;
     }
 
-    const years = new Set(
-      data.map(g => `${g.year_start}-${g.year_end}`)
-    );
+    const years = new Set(data.map(g => `${g.year_start}-${g.year_end}`));
 
     studyYearSelect.innerHTML =
       `<option value="">— Оберіть навчальний рік —</option>`;
 
-    [...years].forEach(y =>
-      studyYearSelect.add(new Option(y, y))
-    );
+    [...years].forEach(y => {
+      studyYearSelect.add(new Option(y, y));
+    });
   }
 
   async function loadGroupsByYear(yearRange) {
@@ -99,7 +130,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const [ys, ye] = yearRange.split("-").map(Number);
 
-    const { data, error } = await window.supabaseClient
+    const { data, error } = await supabase
       .from("groups")
       .select("id, name")
       .eq("year_start", ys)
@@ -107,13 +138,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       .order("name");
 
     if (error) {
-      console.error(error);
+      showError("Не вдалося завантажити список груп");
       return;
     }
 
-    data.forEach(g =>
-      groupSelect.add(new Option(g.name, g.id))
-    );
+    data.forEach(g => {
+      groupSelect.add(new Option(g.name, g.id));
+    });
 
     groupSelect.disabled = false;
   }
@@ -128,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   async function loadCurrentGroupForChild(childId) {
     resetGroupUI();
 
-    const { data } = await window.supabaseClient
+    const { data, error } = await supabase
       .from("child_group_history")
       .select(`
         group_id,
@@ -138,7 +169,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       .eq("is_current", true)
       .single();
 
-    if (!data) return;
+    if (error || !data?.groups) return;
 
     const yearValue =
       `${data.groups.year_start}-${data.groups.year_end}`;
@@ -152,17 +183,17 @@ document.addEventListener("DOMContentLoaded", async () => {
      LOAD CHILDREN LIST
   ====================================================== */
   async function loadChildrenList() {
-    const { data, error } = await window.supabaseClient
+    const { data, error } = await supabase
       .from("childrens")
       .select("id")
       .order("last_name");
 
     if (error) {
-      console.error(error);
+      showError("Не вдалося завантажити список дітей");
       return;
     }
 
-    childrenIds = data.map(c => c.id);
+    childrenIds = (data || []).map(c => c.id);
     updateNavigationUI();
   }
 
@@ -183,45 +214,68 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   confirmBtn.onclick = async () => {
     if (!selectedChild) return;
+
     currentIndex = childrenIds.indexOf(selectedChild.id);
+    if (currentIndex === -1) {
+      await loadChildrenList();
+      currentIndex = childrenIds.indexOf(selectedChild.id);
+    }
+
     await openChild(selectedChild);
     modal.classList.add("hidden");
     updateNavigationUI();
   };
 
-  Object.values(filters).forEach(i =>
-    i.addEventListener("input", runSearch)
-  );
+  Object.values(filters).forEach(input => {
+    input.addEventListener("input", runSearch);
+  });
 
   async function runSearch() {
-    let q = window.supabaseClient
+    let q = supabase
       .from("childrens")
       .select("*")
       .order("last_name")
       .limit(5);
 
-    if (filters.last.value)
+    if (filters.last.value) {
       q = q.ilike("last_name", `%${filters.last.value}%`);
-    if (filters.first.value)
+    }
+    if (filters.first.value) {
       q = q.ilike("first_name", `%${filters.first.value}%`);
-    if (filters.birth.value)
+    }
+    if (filters.birth.value) {
       q = q.eq("birth_date", filters.birth.value);
-    if (filters.cert.value)
+    }
+    if (filters.cert.value) {
       q = q.ilike("birth_certificate", `%${filters.cert.value}%`);
+    }
 
-    const { data } = await q;
+    const { data, error } = await q;
+
+    if (error) {
+      showError("Не вдалося виконати пошук");
+      return;
+    }
 
     resultsList.innerHTML = "";
     selectedChild = null;
+
+    if (!data || data.length === 0) {
+      const li = document.createElement("li");
+      li.textContent = "Нічого не знайдено";
+      li.style.cursor = "default";
+      resultsList.appendChild(li);
+      return;
+    }
 
     data.forEach(c => {
       const li = document.createElement("li");
       li.textContent = `${c.last_name} ${c.first_name}`;
       li.onclick = () => {
         selectedChild = c;
-        [...resultsList.children].forEach(x =>
-          x.classList.remove("active")
-        );
+        [...resultsList.children].forEach(x => {
+          x.classList.remove("active");
+        });
         li.classList.add("active");
       };
       resultsList.appendChild(li);
@@ -235,7 +289,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     childIdInput.value = data.id;
 
     form.querySelectorAll("input[type=radio]")
-      .forEach(r => r.checked = false);
+      .forEach(r => {
+        r.checked = false;
+      });
 
     Object.keys(data).forEach(k => {
       const f = form.elements[k];
@@ -274,14 +330,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   async function loadChildById(id) {
-    const { data, error } = await window.supabaseClient
+    const { data, error } = await supabase
       .from("childrens")
       .select("*")
       .eq("id", id)
       .single();
 
-    if (error) {
-      console.error(error);
+    if (error || !data) {
+      showError("Не вдалося завантажити картку дитини");
       return;
     }
 
@@ -291,7 +347,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   prevBtn.onclick = async () => {
     if (!confirmUnsavedChanges() || currentIndex <= 0) return;
-    currentIndex--;
+    currentIndex -= 1;
     await loadChildById(childrenIds[currentIndex]);
   };
 
@@ -300,7 +356,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       !confirmUnsavedChanges() ||
       currentIndex >= childrenIds.length - 1
     ) return;
-    currentIndex++;
+    currentIndex += 1;
     await loadChildById(childrenIds[currentIndex]);
   };
 
@@ -326,21 +382,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     form.querySelectorAll("input[type=checkbox]")
-      .forEach(cb => payload[cb.name] = cb.checked);
+      .forEach(cb => {
+        payload[cb.name] = cb.checked;
+      });
 
     let childId = childIdInput.value;
 
     if (childId) {
-      await window.supabaseClient
+      const { error } = await supabase
         .from("childrens")
         .update(payload)
         .eq("id", childId);
+
+      if (error) {
+        showError("Не вдалося оновити картку дитини");
+        return;
+      }
     } else {
-      const { data } = await window.supabaseClient
+      const { data, error } = await supabase
         .from("childrens")
         .insert([payload])
         .select("id")
         .single();
+
+      if (error || !data?.id) {
+        showError("Не вдалося створити картку дитини");
+        return;
+      }
 
       childId = data.id;
       childIdInput.value = childId;
@@ -348,13 +416,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (selectedGroup) {
-      await window.supabaseClient.rpc(
+      const { error } = await supabase.rpc(
         "transfer_child_to_group",
         {
           p_child_id: childId,
           p_group_id: selectedGroup
         }
       );
+
+      if (error) {
+        showError("Дані збережені, але не вдалося оновити групу");
+        return;
+      }
     }
 
     alert("✅ Збережено");
@@ -362,7 +435,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     unsavedIndicator.classList.add("hidden");
 
     await loadChildrenList();
-    updateNavigationUI();
+    if (currentIndex >= 0 && childrenIds[currentIndex]) {
+      await loadChildById(childrenIds[currentIndex]);
+    }
   });
 
   /* ======================================================
@@ -370,4 +445,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   ====================================================== */
   await loadChildrenList();
   await loadStudyYears();
+
+  if (childrenIds.length > 0) {
+    currentIndex = 0;
+    await loadChildById(childrenIds[currentIndex]);
+  } else {
+    clearForm();
+    updateNavigationUI();
+  }
 });

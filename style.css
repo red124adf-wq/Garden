@@ -1,6 +1,12 @@
 /* ==================================================
-   БАЗА
+   BASE
 ================================================== */
+:root {
+    --accent: #ff9900;
+    --sidebar-bg: #ffcc70;
+    --bg-image: none;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -10,15 +16,46 @@
 
 body {
     background: #f4f9ff;
+    color: #222;
 }
 
-/* Заголовок сторінки */
-.content h1 {
+.hidden {
+    display: none !important;
+}
+
+/* ==================================================
+   AUTH
+================================================== */
+.auth {
+    width: min(420px, 92vw);
+    margin: 9vh auto 0;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+    padding: 24px;
+    display: grid;
+    gap: 12px;
+}
+
+.auth h2 {
     text-align: center;
-    color: var(--accent);
-    margin-bottom: 16px;
-    font-weight: 700;
-    letter-spacing: 0.3px;
+    color: #374151;
+}
+
+.auth input,
+.auth button {
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    padding: 12px;
+    font-size: 15px;
+}
+
+.auth button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
 }
 
 /* ==================================================
@@ -26,30 +63,24 @@ body {
 ================================================== */
 .app {
     display: flex;
-    height: 100vh;
+    min-height: 100vh;
 }
 
-/* ==================================================
-   SIDEBAR
-================================================== */
 .sidebar {
     width: 230px;
     background: var(--sidebar-bg);
     padding: 20px;
     display: flex;
     flex-direction: column;
-    position: relative;
-    overflow: hidden;
 }
 
-/* Логотип */
 .logo {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    margin-bottom: 30px;
-    font-weight: bold;
+    margin-bottom: 24px;
+    font-weight: 700;
 }
 
 .logo-icon {
@@ -58,7 +89,6 @@ body {
 }
 
 @keyframes cherryBounce {
-
     0%,
     100% {
         transform: translateY(0);
@@ -69,64 +99,35 @@ body {
     }
 }
 
-/* ==================================================
-   MENU BUTTONS — accent aware
-================================================== */
-
 .menu-btn {
     background: #fff;
     border: 2px solid transparent;
-
     padding: 12px;
     margin-bottom: 10px;
     border-radius: 12px;
-
     font-size: 15px;
-    cursor: pointer;
-
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-
     color: #333;
-	text-decoration: none;
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease,
-        color 0.2s ease,
-        transform 0.15s ease;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease;
 }
 
-/* hover */
 .menu-btn:hover {
     background: color-mix(in srgb, var(--accent) 15%, #ffffff);
     border-color: var(--accent);
     transform: translateY(-1px);
 }
 
-/* active */
 .menu-btn.active {
     background: var(--accent);
     border-color: var(--accent);
     color: #fff;
-    font-weight: bold;
+    font-weight: 700;
 }
 
-/* active + hover (щоб не "стрибало") */
-.menu-btn.active:hover {
-    background: var(--accent);
-    transform: none;
-}
-
-.menu-btn span,
-.menu-btn i {
-    font-size: 16px;
-}
-
-/* ==================================================
-   CONTENT
-================================================== */
 .content {
     flex: 1;
     padding: 30px;
@@ -134,7 +135,6 @@ body {
     overflow: hidden;
 }
 
-/* Фон */
 .content::before {
     content: "";
     position: absolute;
@@ -143,8 +143,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    opacity: 0.12;
-    transition: opacity 0.6s ease;
+    opacity: 0.1;
     z-index: 0;
 }
 
@@ -153,18 +152,31 @@ body {
     z-index: 1;
 }
 
-h1 {
-    color: #333;
+.content h1 {
+    text-align: center;
+    color: var(--accent);
+    margin-bottom: 16px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
-.subtitle {
-    margin-top: 5px;
-    color: #666;
+.status {
+    margin: 0 auto 14px;
+    max-width: 640px;
+    background: #eef6ff;
+    color: #1f4f87;
+    border: 1px solid #c7def8;
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-align: center;
+    font-size: 14px;
 }
 
-/* ===============================
-   ОФІЦІЙНА ІНФОРМАЦІЯ ЗАКЛАДУ
-=============================== */
+.status.error {
+    background: #fff2f2;
+    color: #9f1239;
+    border-color: #fecdd3;
+}
 
 .institution-info {
     margin: 20px 0 30px;
@@ -193,54 +205,39 @@ h1 {
     white-space: nowrap;
 }
 
-.info-value {
-    color: #222;
-}
-
 .info-value a {
     color: var(--accent);
     text-decoration: none;
     font-weight: 600;
 }
 
-.info-value a:hover {
-    text-decoration: underline;
-}
-
-/* ==================================================
-   CARDS
-================================================== */
 .cards {
-    display: flex;
-    gap: 20px;
-    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-top: 24px;
 }
 
 .card {
     background: #fff;
     border-radius: 15px;
     padding: 20px;
-    flex: 1;
     text-align: center;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .card h3 {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-bottom: 10px;
 }
 
 .card p {
     font-size: 32px;
-    font-weight: bold;
-}
-
-.card h3 {
-    min-height: 44px;
-    /* ⭐ КЛЮЧОВЕ */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
+    font-weight: 700;
+    color: var(--accent);
 }
 
 .gender-stats {
@@ -254,19 +251,14 @@ h1 {
 
 .gender-stats .girls {
     color: #e84393;
-    /* дівчата */
 }
 
 .gender-stats .boys {
     color: #0984e3;
-    /* хлопці */
 }
 
-/* ==================================================
-   НАВЧАЛЬНИЙ РІК
-================================================== */
 .school-year-card {
-    flex: 1.5;
+    grid-column: span 2;
 }
 
 .school-year-control {
@@ -279,27 +271,20 @@ h1 {
 
 .school-year {
     font-size: 28px;
-    font-weight: bold;
-    white-space: nowrap;
-    letter-spacing: 1px;
+    font-weight: 700;
+    color: var(--accent);
 }
 
-/* Кнопки */
 .year-btn {
     background: #fff;
     border: 2px solid var(--accent);
     color: var(--accent);
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 700;
     width: 36px;
     height: 36px;
     border-radius: 50%;
     cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.year-btn:hover:not(:disabled) {
-    background: #fffaf0;
 }
 
 .year-btn:disabled {
@@ -307,239 +292,92 @@ h1 {
     cursor: not-allowed;
 }
 
-/* ==================================================
-   КАЛЕНДАР
-================================================== */
-
-.calendar-card {
-    flex: 2;
-}
-
-/* Поле з вибраною датою */
 .calendar-value {
     margin-top: 10px;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 700;
     text-align: center;
-    letter-spacing: 1px;
-
     width: 100%;
     background: transparent;
     border: 2px solid transparent;
     color: var(--accent);
-    cursor: pointer;
 }
 
-/* Hover для поля дати */
 .calendar-value:hover {
     border-color: var(--accent);
     background: #fffaf0;
 }
 
-/* Focus для поля дати */
-.calendar-value:focus {
-    outline: none;
-    border-color: var(--accent);
-    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
-}
-
-/* Flatpickr input */
-.flatpickr-input[readonly] {
-    cursor: pointer;
-}
-
-/* =========================================
-   ДНІ В КАЛЕНДАРІ
-========================================= */
-
-/* ВИБРАНИЙ ДЕНЬ / СЬОГОДНІ — КРУЖЕЧОК */
 .flatpickr-day.selected,
 .flatpickr-day.today {
     background: var(--accent) !important;
     color: #fff !important;
-
     border-radius: 50% !important;
-    border: none !important;
-    box-shadow: none !important;
 }
 
-/* СВЯТА — ТІЛЬКИ КОЛІР ЦИФРИ */
 .flatpickr-day.is-holiday {
     background: transparent !important;
     color: #e67e22 !important;
-    font-weight: 600;
-
-    border-radius: 0 !important;
-    box-shadow: none !important;
+    font-weight: 700;
 }
 
-/* ВИХІДНІ — ТІЛЬКИ КОЛІР ЦИФРИ */
-.flatpickr-day.is-weekend {
-    background: transparent !important;
-    color: #e74c3c !important;
-
-    border-radius: 0 !important;
-}
-
-/* Якщо свято або вихідний = selected — selected має пріоритет */
-.flatpickr-day.selected.is-holiday,
-.flatpickr-day.selected.is-weekend {
-    background: var(--accent) !important;
-    color: #fff !important;
-    border-radius: 50% !important;
-}
-
-/* ==================================================
-   СЕЗОНИ
-================================================== */
-body {
-    background: #f4f9ff;
-    --accent: #ff9900;
-    --sidebar-bg: #ffcc70;
-    --particle: "";
-    /* fallback фон */
-    --bg-image: none;
-}
-
-/* 🌸 Весна */
-body.season-spring {
-    --accent: #ff6fae;
-    --sidebar-bg: #ffd9e6;
-    --particle: "🌸";
-    --bg-image: url("spring.png");
-}
-
-/* ☀️ Літо */
-body.season-summer {
-    --accent: #ffa500;
-    --sidebar-bg: #ffe08a;
-    --particle: "☀️";
-    --bg-image: url("summer.png");
-}
-
-/* 🍁 Осінь */
-body.season-autumn {
-    --accent: #d2691e;
-    --sidebar-bg: #ffcf9f;
-    --particle: "🍁";
-    --bg-image: url("autumn.png");
-}
-
-/* ❄️ Зима */
-body.season-winter {
-    --accent: #6fa8ff;
-    --sidebar-bg: #dfefff;
-    --particle: "❄️";
-    --bg-image: url("winter.png");
-}
-
-/* Застосування сезонного кольору */
-.card p,
-.school-year {
-    color: var(--accent);
-}
-
-/* ==================================================
-   СЕЗОННІ ЧАСТИНКИ
-================================================== */
-
-.season-particle {
-    position: absolute;
-    top: -30px;
-    pointer-events: none;
-    opacity: 0.9;
-    animation: fall linear forwards;
-}
-
-@keyframes fall {
-    0% {
-        transform: translateY(0) rotate(0deg);
-        opacity: 0;
-    }
-
-    10% {
-        opacity: 1;
-    }
-
-    100% {
-        transform: translateY(110vh) rotate(360deg);
-        opacity: 0;
-    }
-}
-
-/* Вихідні */
 .flatpickr-day.is-weekend {
     background: #fff2f2;
     color: #d63031;
     font-weight: 600;
 }
 
-/* Свята — ТІЛЬКИ КОЛІР ЦИФРИ */
-.flatpickr-day.is-holiday {
-    background: transparent !important;
-    /* ⬅ повністю прибираємо фон */
-    color: #e67e22 !important;
-    /* ⬅ колір цифри */
-    font-weight: 700;
-
-    border: none !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
+/* ==================================================
+   SEASONS
+================================================== */
+body.season-spring {
+    --accent: #ff6fae;
+    --sidebar-bg: #ffd9e6;
+    --bg-image: url("spring.png");
 }
 
-/* Свято + today або selected — теж тільки цифра */
-.flatpickr-day.is-holiday.today,
-.flatpickr-day.is-holiday.selected {
-    background: transparent !important;
-    color: #e67e22 !important;
-    box-shadow: none !important;
+body.season-summer {
+    --accent: #ffa500;
+    --sidebar-bg: #ffe08a;
+    --bg-image: url("pattern.svg");
 }
 
-/* ===============================
-   ОФІЦІЙНА ІНФОРМАЦІЯ ЗАКЛАДУ
-=============================== */
-
-.institution-info {
-    margin: 20px 0 30px;
-    padding: 16px 20px;
-    background: #ffffff;
-    border-radius: 14px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+body.season-autumn {
+    --accent: #d2691e;
+    --sidebar-bg: #ffcf9f;
+    --bg-image: url("cherry.png");
 }
 
-.info-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px 10px;
-    margin-bottom: 8px;
-    font-size: 14px;
-    line-height: 1.5;
+body.season-winter {
+    --accent: #6fa8ff;
+    --sidebar-bg: #dfefff;
+    --bg-image: url("winter.png");
 }
 
-.info-row:last-child {
-    margin-bottom: 0;
-}
+@media (max-width: 980px) {
+    .app {
+        flex-direction: column;
+    }
 
-.info-label {
-    font-weight: 600;
-    color: #555;
-    white-space: nowrap;
-}
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 
-.info-value {
-    color: #222;
-}
+    .logo {
+        width: 100%;
+        margin-bottom: 8px;
+    }
 
-.info-value a {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-}
+    .menu-btn {
+        margin-bottom: 0;
+        flex: 1 1 180px;
+    }
 
-.info-value a:hover {
-    text-decoration: underline;
-}
-
-.hidden {
-    display: none;
+    .school-year-card {
+        grid-column: span 1;
+    }
 }

@@ -3,22 +3,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!container) return;
 
   try {
-    // 1. Завантажуємо sidebar.html
-    const res = await fetch("sidebar.html");
-    const html = await res.text();
+    const response = await fetch("sidebar.html", { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+
+    const html = await response.text();
     container.innerHTML = html;
 
-    // 2. Визначаємо поточну сторінку
     const page = location.pathname.split("/").pop().replace(".html", "");
 
-    // 3. Проставляємо active
-    container.querySelectorAll(".menu-btn").forEach(btn => {
+    container.querySelectorAll(".menu-btn").forEach((btn) => {
       if (btn.dataset.page === page) {
         btn.classList.add("active");
+        btn.setAttribute("aria-current", "page");
+      }
+
+      if (btn.dataset.disabled === "true") {
+        btn.addEventListener("click", (event) => {
+          event.preventDefault();
+        });
       }
     });
-
   } catch (err) {
     console.error("Sidebar load error:", err);
+    container.innerHTML = "";
   }
 });

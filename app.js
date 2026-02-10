@@ -1,22 +1,21 @@
 /* ======================================================
    DOM
 ====================================================== */
-const yearText      = document.getElementById("totalPromigok");
+const yearText = document.getElementById("totalPromigok");
 const totalChildren = document.getElementById("totalChildren");
-const totalGirls    = document.getElementById("totalGirls");
-const totalBoys     = document.getElementById("totalBoys");
+const totalGirls = document.getElementById("totalGirls");
+const totalBoys = document.getElementById("totalBoys");
 const totalGroups = document.getElementById("totalGroups");
+const totalTeachers = document.getElementById("totalTeachers");
+const statusEl = document.getElementById("dashboardStatus");
 
 const prevBtn = document.getElementById("prevYear");
 const nextBtn = document.getElementById("nextYear");
 
 /* ======================================================
    SUPABASE
-   ❗ НЕ СТВОРЮЄМО ЗАНОВО
-   ❗ ВИКОРИСТОВУЄМО ІСНУЮЧИЙ
 ====================================================== */
-const supabaseClient =
-    window.supabaseClient || window.supabase;
+const supabaseClient = window.supabaseClient || window.supabase;
 
 /* ======================================================
    STATE
@@ -25,121 +24,172 @@ let years = [];
 let currentIndex = 0;
 
 /* ======================================================
+   UI HELPERS
+====================================================== */
+function setStatus(message = "", isError = false) {
+  if (!statusEl) return;
+
+  statusEl.textContent = message;
+  statusEl.classList.toggle("hidden", !message);
+  statusEl.classList.toggle("error", isError);
+}
+
+function setDefaultDashboardState() {
+  yearText.textContent = "—";
+  totalChildren.textContent = "0";
+  totalGirls.textContent = "0";
+  totalBoys.textContent = "0";
+  totalGroups.textContent = "0";
+  totalTeachers.textContent = "—";
+
+  prevBtn.disabled = true;
+  nextBtn.disabled = true;
+}
+
+/* ======================================================
    LOAD YEARS
 ====================================================== */
 async function loadYears() {
-    const { data, error } = await supabaseClient
-        .from("report_children_by_year")
-        .select("study_start_date, study_end_date")
-        .order("study_start_date", { ascending: true });
+  if (!supabaseClient) {
+    setStatus("Помилка ініціалізації Supabase", true);
+    setDefaultDashboardState();
+    return;
+  }
 
-    if (error) {
-        console.error("Помилка завантаження років:", error);
-        return;
+  setStatus("Завантаження даних...");
+
+  const { data, error } = await supabaseClient
+    .from("report_children_by_year")
+    .select("study_start_date, study_end_date")
+    .order("study_start_date", { ascending: true });
+
+  if (error) {
+    console.error("Помилка завантаження років:", error);
+    setStatus("Не вдалося завантажити навчальні роки", true);
+    setDefaultDashboardState();
+    return;
+  }
+
+  years = data || [];
+
+  if (years.length === 0) {
+    setStatus("Немає даних для відображення");
+    setDefaultDashboardState();
+    return;
+  }
+
+  const today = new Date();
+
+  let foundIndex = years.findIndex((year) => {
+    const start = new Date(year.study_start_date);
+    const end = new Date(year.study_end_date);
+    return today >= start && today <= end;
+  });
+
+  if (foundIndex === -1) {
+    for (let i = years.length - 1; i >= 0; i -= 1) {
+      const end = new Date(years[i].study_end_date);
+      if (end < today) {
+        foundIndex = i;
+        break;
+      }
     }
+  }
 
-    years = data;
+  currentIndex = foundIndex !== -1 ? foundIndex : years.length - 1;
 
-    const today = new Date();
-
-    // знайти реальний поточний навчальний рік
-    let foundIndex = years.findIndex(y => {
-        const start = new Date(y.study_start_date);
-        const end   = new Date(y.study_end_date);
-        return today >= start && today <= end;
-    });
-
-    // якщо сьогодні між роками (літо) — беремо попередній
-    if (foundIndex === -1) {
-        foundIndex = years.findIndex(y => {
-            const end = new Date(y.study_end_date);
-            return end < today;
-        });
-    }
-
-    // fallback — останній
-    currentIndex = foundIndex !== -1
-        ? foundIndex
-        : years.length - 1;
-
-    loadYearData();
+  await loadYearData();
 }
 
 /* ======================================================
    LOAD YEAR DATA
 ====================================================== */
 async function loadYearData() {
-    const year = years[currentIndex];
+  const year = years[currentIndex];
 
-    const { data, error } = await supabaseClient
-        .from("report_children_by_year")
-        .select("*")
-        .eq("study_start_date", year.study_start_date)
-        .single();
+  if (!year) {
+    setStatus("Не знайдено дані по вибраному року", true);
+    setDefaultDashboardState();
+    return;
+  }
 
-    if (error) {
-        console.error("Помилка завантаження року:", error);
-        return;
-    }
+  const { data, error } = await supabaseClient
+    .from("report_children_by_year")
+    .select("*")
+    .eq("study_start_date", year.study_start_date)
+    .single();
 
-    const from = new Date(data.study_start_date).getFullYear();
-    const to   = new Date(data.study_end_date).getFullYear();
+  if (error) {
+    console.error("Помилка завантаження року:", error);
+    setStatus("Не вдалося завантажити підсумки року", true);
+    return;
+  }
 
-    yearText.textContent      = `${from}–${to}`;
-    totalChildren.textContent = data.total_children;
-    totalGirls.textContent    = data.girls;
-    totalBoys.textContent     = data.boys;
+  const from = new Date(data.study_start_date).getFullYear();
+  const to = new Date(data.study_end_date).getFullYear();
 
-	loadGroupsForYear(
-		data.study_start_date,
-		data.study_end_date
-	);
+  yearText.textContent = `${from}–${to}`;
+  totalChildren.textContent = data.total_children ?? "0";
+  totalGirls.textContent = data.girls ?? "0";
+  totalBoys.textContent = data.boys ?? "0";
+  totalTeachers.textContent = data.total_teachers ?? "—";
 
-    prevBtn.disabled = currentIndex === 0;
-    nextBtn.disabled = currentIndex === years.length - 1;
+  await loadGroupsForYear(data.study_start_date, data.study_end_date);
+
+  prevBtn.disabled = currentIndex === 0;
+  nextBtn.disabled = currentIndex === years.length - 1;
+
+  setStatus("");
 }
 
 /* ======================================================
    YEAR CONTROLS
 ====================================================== */
-prevBtn.onclick = () => {
-    if (currentIndex > 0) {
-        currentIndex--;
-        loadYearData();
-    }
+prevBtn.onclick = async () => {
+  if (currentIndex > 0) {
+    currentIndex--;
+    await loadYearData();
+  }
 };
 
-nextBtn.onclick = () => {
-    if (currentIndex < years.length - 1) {
-        currentIndex++;
-        loadYearData();
-    }
+nextBtn.onclick = async () => {
+  if (currentIndex < years.length - 1) {
+    currentIndex++;
+    await loadYearData();
+  }
 };
 
 /* ======================================================
-   MENU (як було)
+   MENU
 ====================================================== */
-document.querySelectorAll(".menu-btn").forEach(btn => {
-    btn.onclick = () => {
-        document.querySelectorAll(".menu-btn")
-            .forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-    };
+document.querySelectorAll(".menu-btn").forEach((btn) => {
+  btn.onclick = () => {
+    document
+      .querySelectorAll(".menu-btn")
+      .forEach((menuBtn) => menuBtn.classList.remove("active"));
+    btn.classList.add("active");
+  };
 });
 
 /* ======================================================
-   SEASON (НЕ ЧІПАЄМО)
+   SEASON
 ====================================================== */
 (function setSeason() {
-    const m = new Date().getMonth();
-    let season = "summer";
+  const month = new Date().getMonth();
+  let season = "summer";
 
-    if (m >= 2 && m <= 4) season = "spring";
-    else if (m >= 5 && m <= 7) season = "summer";
-    else if (m >= 8 && m <= 10) season = "autumn";
-    else season = "winter";
+  if (month >= 2 && month <= 4) season = "spring";
+  else if (month >= 5 && month <= 7) season = "summer";
+  else if (month >= 8 && month <= 10) season = "autumn";
+  else season = "winter";
 
-    document.body.className = `season-${season}`;
+  document.body.classList.remove(
+    "season-spring",
+    "season-summer",
+    "season-autumn",
+    "season-winter"
+  );
+  document.body.classList.add(`season-${season}`);
 })();
 
 /* ======================================================
@@ -151,17 +201,17 @@ document.addEventListener("DOMContentLoaded", loadYears);
    LOAD GROUPS
 ====================================================== */
 async function loadGroupsForYear(studyStartDate, studyEndDate) {
-    const { data, error } = await supabaseClient
-        .from("groups")
-        .select("id")
-        .eq("study_start_date", studyStartDate)
-        .eq("study_end_date", studyEndDate);
+  const { data, error } = await supabaseClient
+    .from("groups")
+    .select("id")
+    .eq("study_start_date", studyStartDate)
+    .eq("study_end_date", studyEndDate);
 
-    if (error) {
-        console.error("Помилка завантаження груп:", error);
-        totalGroups.textContent = "—";
-        return;
-    }
+  if (error) {
+    console.error("Помилка завантаження груп:", error);
+    totalGroups.textContent = "—";
+    return;
+  }
 
-    totalGroups.textContent = data.length;
+  totalGroups.textContent = data.length;
 }
