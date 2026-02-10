@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Звіт</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #fff;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        th {
+            background: #f3f3f3;
+        }
+    </style>
+</head>
+<body>
+
+<h1>📊 Звіт по дітях</h1>
+<div id="meta"></div>
+
+<table id="reportTable">
+    <thead>
+        <tr>
+            <th>ПІБ</th>
+            <th>Стать</th>
+            <th>Дата народження</th>
+            <th>Група</th>
+            <th>Населений пункт</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="core.js"></script>
+<script src="report-view.js"></script>
+
+</body>
+</html>

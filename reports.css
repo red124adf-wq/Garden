@@ -1,0 +1,232 @@
+/* ======================================================
+   BASE / RESET
+====================================================== */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+    --accent: #ff9900;
+    --bg-main: #fff4e6;
+    --card-bg: #ffffff;
+    --border-soft: #eee;
+    --text-main: #333;
+    --text-muted: #666;
+}
+
+body {
+    background: var(--bg-main);
+    color: var(--text-main);
+}
+
+/* ======================================================
+   APP LAYOUT
+====================================================== */
+
+.app {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* ======================================================
+   REPORTS CONTENT
+====================================================== */
+
+.reports {
+    flex: 1;
+    padding: 32px 40px 40px;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.reports h1 {
+    font-size: 26px;
+    font-weight: 700;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* ======================================================
+   FILTERS GRID — 3 COLUMNS / 2 ROWS (КЛЮЧ)
+====================================================== */
+
+.filters {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr 1.3fr;
+    grid-template-rows: auto auto; /* 🔥 ЄДИНЕ місце, де формується висота */
+    gap: 36px;
+    align-items: stretch; /* 🔥 КАРТКИ ТЯГНУТЬСЯ ПО РЯДУ */
+}
+
+/* ======================================================
+   CARD
+====================================================== */
+
+.card {
+    background: var(--card-bg);
+    border-radius: 18px;
+    padding: 24px 24px 22px;
+    box-shadow:
+        0 2px 4px rgba(0,0,0,0.05),
+        0 10px 28px rgba(0,0,0,0.08);
+}
+
+.card.compact {
+    padding: 20px 22px 18px;
+}
+
+.card h3 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+/* ======================================================
+   INPUTS / SELECTS
+====================================================== */
+
+.card input,
+.card select {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    margin-bottom: 12px;
+    font-size: 14.5px;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    background: #fff;
+}
+
+.card input:last-child,
+.card select:last-child {
+    margin-bottom: 0;
+}
+
+.card input:focus,
+.card select:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 2px rgba(255,153,0,0.25);
+}
+
+/* ======================================================
+   OPTIONS (RADIO / CHECKBOX)
+====================================================== */
+
+.options {
+    display: grid;
+    grid-template-columns: 26px 1fr;
+    row-gap: 12px;
+    column-gap: 12px;
+    align-items: center;
+}
+
+.options.options-2col {
+    grid-template-columns: 26px 1fr 26px 1fr;
+}
+
+.option {
+    display: contents;
+}
+
+.option input {
+    justify-self: center;
+    margin: 0;
+}
+
+.option span {
+    font-size: 14.5px;
+    color: var(--text-main);
+}
+
+/* ======================================================
+   ACTIONS
+====================================================== */
+
+.actions {
+    grid-column: 1 / -1;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-soft);
+    display: flex;
+    justify-content: flex-end;
+    gap: 18px;
+}
+
+.actions button {
+    min-width: 180px;
+    padding: 14px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+    transition: background 0.15s ease, box-shadow 0.15s ease;
+}
+
+#clear {
+    background: #e5e5e5;
+}
+
+#clear:hover {
+    background: #d9d9d9;
+}
+
+#generate {
+    background: var(--accent);
+    color: #fff;
+}
+
+#generate:hover {
+    background: #f08c00;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.18);
+}
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
+
+@media (max-width: 1300px) {
+    .filters {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: auto auto auto;
+    }
+}
+
+@media (max-width: 900px) {
+    .filters {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+
+    .actions {
+        justify-content: center;
+    }
+}
+
+.divider {
+    border: none;
+    height: 1px;
+    background: var(--border-soft);
+    margin: 18px 0;
+}
+
+/* ======================================================
+   PAGE WRAPPER (SIDEBAR OFFSET)
+====================================================== */
+
+.page {
+    margin-left: 240px;   /* ← ширина sidebar */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Звіти</title>
+
+    <link rel="stylesheet" href="reports.css">
+    <link rel="stylesheet" href="sidebar.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- sidebar підвантажується динамічно -->
+    <div id="sidebar-container"></div>
+	<div class="page">
+    <!-- CONTENT -->
+    <main class="reports">
+
+        <h1>📊 Створення звіту</h1>
+
+        <div class="filters">
+
+            <!-- ================= COL 1 ================= -->
+            <section class="card" style="grid-column:1; grid-row:1;">
+                <h3>Основні фільтри</h3>
+
+                <select id="gender">
+                    <option value="">Стать</option>
+                    <option value="чоловіча">Хлопчики</option>
+                    <option value="жіноча">Дівчатка</option>
+                </select>
+
+                <input id="birth_from" placeholder="Дата народження (з)">
+                <input id="birth_to" placeholder="Дата народження (по)">
+
+                <select id="school_year">
+                    <option value="">Навчальний рік</option>
+                </select>
+
+                <select id="group">
+                    <option value="">Група</option>
+                </select>
+
+                <input id="city" placeholder="Населений пункт">
+            </section>
+
+            <!-- ================= COL 2 ================= -->
+            <section class="card" style="grid-column:2; grid-row:1;">
+                <h3>Статус перебування</h3>
+
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="leave" value="all" checked>
+                        <span>Всі</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="leave" value="active">
+                        <span>Наявні</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="leave" value="left">
+                        <span>Вибувші</span>
+                    </label>
+                </div>
+
+                <hr class="divider">
+
+                <h3>Територіальне перебування</h3>
+
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="territory" value="village">
+                        <span>На території села</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="territory" value="ukraine">
+                        <span>На території України</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="radio" name="territory" value="abroad">
+                        <span>За кордоном</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- ================= COL 3 ================= -->
+            <section class="card" style="grid-column:3; grid-row:1;">
+                <h3>Соціальний статус</h3>
+
+                <div class="options options-2col">
+                    <label class="option">
+                        <input type="checkbox" value="orphan">
+                        <span>Сирота</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="inclusive">
+                        <span>Інклюзія</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="many">
+                        <span>Багатодітна сімʼя</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="poor">
+                        <span>Малозабезпечений</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="no_care">
+                        <span>Позбавлений піклування</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="chernobyl">
+                        <span>Чорнобиль</span>
+                    </label>
+                </div>
+
+                <hr class="divider">
+
+                <h3>Статус, повʼязаний з війною</h3>
+
+                <div class="options options-2col">
+                    <label class="option">
+                        <input type="checkbox" value="ato">
+                        <span>АТО</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="vpo">
+                        <span>ВПО</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="war_child">
+                        <span>Дитина війни</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="military">
+                        <span>Батьки військові</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="ubd">
+                        <span>Батьки УБД</span>
+                    </label>
+
+                    <label class="option">
+                        <input type="checkbox" value="missing">
+                        <span>Зниклий безвісти</span>
+                    </label>
+                </div>
+            </section>
+
+            <!-- ================= ACTIONS ================= -->
+            <div class="actions">
+                <button id="clear" type="button">♻️ Очистити</button>
+                <button id="generate" type="button">🧾 Створити звіт</button>
+            </div>
+
+        </div>
+    </main>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="core.js"></script>
+<script src="sidebar.js"></script>
+<script src="reports.js"></script>
+
+</body>
+</html>
