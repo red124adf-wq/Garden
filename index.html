@@ -1,130 +1,68 @@
 <!DOCTYPE html>
 <html lang="uk">
-
 <head>
-    <meta charset="UTF-8">
-    <title>Дар'ївський ЗДО</title>
-
-    <!-- Основні стилі -->
-    <link rel="stylesheet" href="style.css">
-
-    <!-- flatpickr -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Зелений Сад — затишний дитячий простір</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-    <!-- ===== AUTH ===== -->
-    <div id="authBlock" class="auth">
-        <h2>🔐 Вхід до системи</h2>
+  <header class="hero" id="home">
+    <nav class="container nav">
+      <a class="logo" href="#home">🌱 Зелений Сад</a>
+      <div class="nav-links">
+        <a href="#about">Про нас</a>
+        <a href="#programs">Програми</a>
+        <a href="#contacts">Контакти</a>
+      </div>
+    </nav>
 
-        <input id="email" type="email" placeholder="Email">
-        <input id="password" type="password" placeholder="Пароль">
-
-        <button id="loginBtn">Увійти</button>
+    <div class="container hero-content">
+      <p class="tag">Турбота • Розвиток • Радість</p>
+      <h1>Невеличкий сайт для сучасного дитячого простору</h1>
+      <p class="subtitle">Ми допомагаємо дітям навчатися через гру, творчість і добрі емоції.</p>
+      <a class="cta" href="#contacts">Записатись на екскурсію</a>
     </div>
+  </header>
 
-    <!-- ===== APP ===== -->
-    <div id="app" class="app hidden">
-        <div class="app">
-            <!-- Sidebar -->
-            <aside class="sidebar">
-                <h2 class="logo">
-                    <span class="logo-icon">🍒</span>
-                    Садочок
-                </h2>
+  <main>
+    <section class="container section" id="about">
+      <h2>Про нас</h2>
+      <p>«Зелений Сад» — це дружня атмосфера, безпечне середовище та уважна команда вихователів. Тут кожна дитина може проявити себе, знайти друзів і впевнено зростати.</p>
+    </section>
 
-                <a href="index.html" class="menu-btn active">🏠 Головна</a>
-				<a href="childrens.html" class="menu-btn">👶 Діти</a>
-				<a href="groups.html" class="menu-btn">📚 Групи</a>
-				<a href="reports.html" class="menu-btn">📊 Звіти</a>
-				<a href="#" class="menu-btn">👩‍🏫 Вихователі</a>
-				<a href="#" class="menu-btn">⚙️ Налаштування</a>
+    <section class="container section" id="programs">
+      <h2>Наші програми</h2>
+      <div class="cards">
+        <article class="card">
+          <h3>🎨 Творчість</h3>
+          <p>Малювання, аплікації та ліплення для розвитку уяви та дрібної моторики.</p>
+        </article>
+        <article class="card">
+          <h3>🔤 Підготовка до школи</h3>
+          <p>Заняття з читання, логіки та математики у легкій ігровій формі.</p>
+        </article>
+        <article class="card">
+          <h3>🧩 Розвиток мислення</h3>
+          <p>Ігри на увагу, пам'ять і комунікацію, що підтримують впевненість дитини.</p>
+        </article>
+      </div>
+    </section>
 
-            </aside>
+    <section class="container section contacts" id="contacts">
+      <h2>Контакти</h2>
+      <p>📍 м. Херсон, вул. Сонячна, 12</p>
+      <p>📞 +380 (50) 123-45-67</p>
+      <p>✉️ hello@zelenysad.ua</p>
+      <button id="helloBtn" class="cta secondary">Привітатись</button>
+      <p id="helloMessage" class="hello-message" aria-live="polite"></p>
+    </section>
+  </main>
 
-            <!-- Main content -->
-            <main class="content">
-                <h1>Дар'ївський заклад дошкільної освіти Дар'ївської сільської ради Херсонського району Херсонської області</h1>
-                <div class="institution-info">
+  <footer>
+    <p>© <span id="year"></span> Зелений Сад. Усі права захищені.</p>
+  </footer>
 
-                    <div class="info-row">
-                        <span class="info-label">ЄДРПОУ:</span>
-                        <span class="info-value">24754240</span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="info-label">Юридична адреса:</span>
-                        <span class="info-value">
-                            75032 Херсонська обл., Херсонський р-н, с. Дар'ївка,
-                            вул. Травнева (Першотравнева), 72
-                        </span>
-                    </div>
-
-                    <div class="info-row">
-                        <span class="info-label">Електронна пошта:</span>
-                        <span class="info-value">
-                            <a href="mailto:dariivkasadok@ukr.net">dariivkasadok@ukr.net</a>
-                        </span>
-                    </div>
-                </div>
-
-
-                <div class="cards">
-                    <!-- Навчальний рік -->
-                    <div class="card school-year-card">
-                        <h3>Поточний навчальний рік</h3>
-
-                        <div class="school-year-control">
-                            <button id="prevYear" class="year-btn" aria-label="Попередній рік">◀</button>
-                            <span id="totalPromigok" class="school-year">2025–2026</span>
-                            <button id="nextYear" class="year-btn" aria-label="Наступний рік">▶</button>
-                        </div>
-                    </div>
-
-                    <div class="card">
-                        <h3>👶 Всього дітей</h3>
-
-                        <p id="totalChildren">0</p>
-
-                        <div class="gender-stats">
-                            <span class="girls">👧 <span id="totalGirls">0</span></span>
-                            <span class="boys">👦 <span id="totalBoys">0</span></span>
-                        </div>
-                    </div>
-
-
-                    <div class="card">
-                        <h3>📚 Груп</h3>
-                        <p id="totalGroups">0</p>
-                    </div>
-
-                    <div class="card">
-                        <h3>🧑‍🏫 Вихователів</h3>
-                        <p id="totalTeachers">0</p>
-                    </div>
-
-                    <!-- Календар -->
-                    <div class="card calendar-card">
-                        <h3>📅 Календар</h3>
-                        <input type="text" id="calendar" class="calendar-input calendar-value" placeholder="дд.мм.рррр" readonly>
-                    </div>
-                </div>
-            </main>
-        </div>
-
-        <!-- Supabase -->
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-        <!-- flatpickr -->
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-        <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/uk.js"></script>
-
-        <!-- Логіка -->
-        <script src="core.js"></script>
-        <script src="auth-ui.js"></script>
-        <script src="app.js"></script>
-        <script src="holidays-ua.js"></script>
-        <script src="calendar.js"></script>
+  <script src="app.js"></script>
 </body>
-
 </html>
