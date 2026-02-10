@@ -4,66 +4,76 @@
   <meta charset="UTF-8" />
   <title>Групи — керування</title>
 
+  <!-- Supabase + core -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
   <script src="core.js"></script>
   <script src="auth-ui.js"></script>
 
+  <!-- Styles -->
   <link rel="stylesheet" href="groups.css" />
+  <link rel="stylesheet" href="sidebar.css">
 </head>
 <body>
 
-<div id="app">
+<div class="app">
 
-  <div class="header">
-    <h1>Керування групами</h1>
-    <button id="openGroupsModal">+ Керувати групами</button>
-  </div>
+  <!-- sidebar буде підвантажено динамічно -->
+  <div id="sidebar-container"></div>
+	<div class="page">
+  <!-- ================= CONTENT ================= -->
+  <main class="content">
 
-  <div class="columns">
+    <div class="header">
+      <h1>📚 Керування групами</h1>
+      <button id="openGroupsModal">+ Керувати групами</button>
+    </div>
 
-    <!-- ЛІВА КОЛОНКА -->
-    <div class="column">
-      <div class="column-header">
-  <input
-    id="leftGroupFilter"
-    type="text"
-    placeholder="Пошук групи…"
-  />
-  <select id="leftGroupSelect"></select>
-</div>
+    <div class="columns">
 
-      <div class="list" id="leftList"></div>
+      <!-- ========== ЛІВА КОЛОНКА ========== -->
+      <div class="column">
+        <div class="column-header">
+          <input
+            id="leftGroupFilter"
+            type="text"
+            placeholder="Пошук групи…"
+          />
+          <select id="leftGroupSelect"></select>
+        </div>
 
-      <div class="actions">
-        <button id="moveSelected">➡️ Перевести вибраних</button>
-        <button id="moveAll">➡️➡️ Перевести всіх</button>
+        <div class="list" id="leftList"></div>
+
+        <div class="actions">
+          <button id="moveSelected">➡️ Перевести вибраних</button>
+          <button id="moveAll">➡️➡️ Перевести всіх</button>
+        </div>
       </div>
+
+      <!-- ========== ПРАВА КОЛОНКА ========== -->
+      <div class="column">
+        <div class="column-header">
+          <input
+            id="rightGroupFilter"
+            type="text"
+            placeholder="Пошук групи…"
+          />
+          <select id="rightGroupSelect"></select>
+        </div>
+
+        <div class="list" id="rightList"></div>
+      </div>
+
     </div>
-
-    <!-- ПРАВА КОЛОНКА -->
-    <div class="column">
-      <div class="column-header">
-  <input
-    id="rightGroupFilter"
-    type="text"
-    placeholder="Пошук групи…"
-  />
-  <select id="rightGroupSelect"></select>
+  </main>
 </div>
-
-      <div class="list" id="rightList"></div>
-    </div>
-
-  </div>
 </div>
-
-<!-- МОДАЛЬНЕ ВІКНО КЕРУВАННЯ ГРУПАМИ -->
+<!-- ================= MODAL ================= -->
 <div id="groupsModal" class="modal hidden">
   <div class="modal-content">
 
     <h2>Керування групами</h2>
 
-    <label style="display:block; margin-bottom:6px;">
+    <label>
       Навчальний рік:
       <select id="groupYearFilter">
         <option value="">— Оберіть навчальний рік —</option>
@@ -77,7 +87,6 @@
     <h3>Створити / редагувати групу</h3>
 
     <input type="hidden" id="groupId" />
-
     <input id="groupName" placeholder="Назва групи" />
     <input id="yearStart" type="number" placeholder="Рік початку" />
     <input id="yearEnd" type="number" placeholder="Рік завершення" />
@@ -92,7 +101,7 @@
 
   </div>
 </div>
-
+<script src="sidebar.js"></script>
 <script src="groups.js"></script>
 </body>
 </html>
