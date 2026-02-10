@@ -1,71 +1,108 @@
-/* ================================
-   BASE
-================================ */
+/* ======================================================
+   BASE / RESET
+====================================================== */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  --accent: #ff9900;
+  --bg-main: #fdf6ee;
+  --card-bg: #fff7ec;
+  --border-soft: #e0d0b8;
+  --text-main: #4a3b2a;
+}
+
 body {
-  margin: 0;
-  padding: 20px;
-  font-family: "Segoe UI", system-ui, sans-serif;
-  background: #fdf6ee;
-  color: #4a3b2a;
+  background: var(--bg-main);
+  color: var(--text-main);
 }
 
-h1 {
-  margin: 0;
-  font-size: 28px;
+/* ======================================================
+   APP LAYOUT
+====================================================== */
+
+.app {
+  display: flex;
+  min-height: 100vh;
 }
 
-h2 {
-  margin-top: 0;
+/* ======================================================
+   CONTENT
+====================================================== */
+
+.content {
+  flex: 1;
+  padding: 28px 32px;
+
+  width: 100%;          /* ← КЛЮЧ */
+  max-width: 1600px;
+
+  margin: 0;            /* ← НЕ auto */
 }
 
-h3 {
-  margin: 16px 0 8px;
-}
-
-/* ================================
+/* ======================================================
    HEADER
-================================ */
+====================================================== */
+
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 22px;
 }
 
-/* ================================
+.header h1 {
+  font-size: 26px;
+  font-weight: 700;
+}
+
+/* ======================================================
    COLUMNS
-================================ */
+====================================================== */
+
 .columns {
   display: flex;
-  gap: 20px;
+  gap: 24px;
 }
 
 .column {
   flex: 1;
-  background: #fff7ec;
-  border-radius: 14px;
-  padding: 14px;
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 
-/* ================================
+/* ======================================================
    COLUMN HEADER
-================================ */
+====================================================== */
+
 .column-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   margin-bottom: 10px;
 }
 
-select {
+.column-header input,
+.column-header select {
   width: 100%;
   padding: 8px;
   border-radius: 8px;
   border: 1px solid #d6c3a5;
   background: #fff;
-  color: inherit;
+  font-size: 14px;
 }
 
-/* ================================
+/* ======================================================
    BUTTONS
-================================ */
+====================================================== */
+
 button {
   padding: 7px 12px;
   border-radius: 8px;
@@ -85,14 +122,15 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* ================================
+/* ======================================================
    CHILD LIST
-================================ */
+====================================================== */
+
 .list {
-  height: 400px;              /* ≈ 15 дітей */
+  height: 400px;
   overflow-y: auto;
   padding: 6px;
-  border: 1px solid #e0d0b8;
+  border: 1px solid var(--border-soft);
   border-radius: 8px;
   background: #ffffff;
 }
@@ -109,22 +147,24 @@ button:disabled {
   cursor: pointer;
 }
 
-/* ================================
+/* ======================================================
    ACTIONS
-================================ */
+====================================================== */
+
 .actions {
   display: flex;
   gap: 10px;
   margin-top: 12px;
 }
 
-/* ================================
+/* ======================================================
    MODAL
-================================ */
+====================================================== */
+
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,20 +179,22 @@ button:disabled {
   width: 420px;
   max-height: 80vh;
   overflow-y: auto;
-  background: #fff7ec;
+  background: var(--card-bg);
   border-radius: 16px;
   padding: 20px;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-/* ================================
+/* ======================================================
    MODAL FORM
-================================ */
+====================================================== */
+
 .modal-content input,
-#groupYearFilter {
+.modal-content select {
   width: 100%;
-  max-width: 360px;          /* однакова ширина */
-  box-sizing: border-box;
+  max-width: 360px;
   padding: 8px;
   margin-bottom: 8px;
   border-radius: 8px;
@@ -161,36 +203,17 @@ button:disabled {
 }
 
 .modal-actions {
+  width: 100%;
+  max-width: 360px;
   display: flex;
   justify-content: space-between;
   margin-top: 12px;
 }
 
-/* Центрована форма в модалці */
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* Вміст форми — фіксована ширина */
-.modal-content input,
-.modal-content select,
-#groupYearFilter {
-  width: 100%;
-  max-width: 360px;
-  box-sizing: border-box;
-}
-
-/* Кнопки — по ширині форми */
-.modal-actions {
-  width: 100%;
-  max-width: 360px;
-}
-
-/* ================================
+/* ======================================================
    GROUP LIST IN MODAL
-================================ */
+====================================================== */
+
 .group-row {
   display: flex;
   justify-content: space-between;
@@ -207,22 +230,13 @@ button:disabled {
   margin-left: 4px;
 }
 
-/* ================================
-   Пошук по рокам
-================================ */
-.column-header input {
-  width: 220px;              /* вистачає для 2025–2026 */
-  max-width: 100%;
-  padding: 8px;
-  margin-bottom: 6px;
-  border-radius: 8px;
-  border: 1px solid #d6c3a5;
-  background: #fff;
-  font-size: 14px;
-}
+/* ======================================================
+   PAGE WRAPPER (SIDEBAR OFFSET)
+====================================================== */
 
-.column-header {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+.page {
+    margin-left: 240px;   /* ← ширина sidebar */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
