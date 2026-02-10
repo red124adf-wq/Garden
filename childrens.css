@@ -33,57 +33,16 @@ body {
   background-size: 220px 220px, cover;
 }
 
-/* ======================================================
-   HEADER
-====================================================== */
 
-.app-header {
-  position: relative;
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,0.25) 0%,
-      rgba(255,255,255,0.05) 25%,
-      rgba(0,0,0,0.05) 100%
-    ),
-    linear-gradient(
-      135deg,
-      #ff7a6d,
-      #ff6f61
-    );
-
-  color: #fff;
-  padding: 30px 20px 34px;
-  text-align: center;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.4),
-    inset 0 -1px 0 rgba(0,0,0,0.15),
-    0 6px 18px rgba(0,0,0,0.25);
-}
-
-
-.app-header h1 {
-  margin: 0;
-  font-size: 26px;
-   text-shadow:
-   0 1px 0 rgba(255,255,255,0.25),
-   0 2px 6px rgba(0,0,0,0.35);
-}
-
-.app-header p {
-  margin: 6px 0 0;
-  opacity: 0.95;
-}
 
 /* ======================================================
    LAYOUT
 ====================================================== */
 
 .container {
-  max-width: 1100px;
-  margin: 30px auto;
+  width: 100%;                 /* ← КЛЮЧ */
+  max-width: 1100px;           /* або 1600px, якщо хочеш */
+  margin: 30px 40px;           /* ← НЕ auto */
   padding: 20px;
 }
 
@@ -431,17 +390,12 @@ button.secondary {
 }
 
 /* ======================================================
-   STICKY HEADER
+   PAGE WRAPPER (SIDEBAR OFFSET)
 ====================================================== */
 
-.app-header {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-
-  transition:
-    padding 0.2s ease,
-    box-shadow 0.2s ease,
-    background 0.2s ease;
+.page {
+    margin-left: 180px;   /* ← ширина sidebar */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
 }
-
