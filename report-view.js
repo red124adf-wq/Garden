@@ -4,6 +4,9 @@
 
 document.addEventListener("DOMContentLoaded", initReportView);
 
+let reportRows = [];
+let selectedDirectoryHandle = null;
+
 /* ================= INIT ================= */
 
 async function initReportView() {
@@ -22,7 +25,9 @@ async function initReportView() {
 
     try {
         const data = await fetchReportData(supabase, params);
+        reportRows = data;
         renderTable(data);
+        setupWordExport();
     } catch (err) {
         console.error(err);
         alert("Помилка завантаження звіту");
@@ -143,6 +148,189 @@ function createRow(row, index) {
     `;
 
     return tr;
+}
+
+
+/* ================= WORD EXPORT ================= */
+
+function setupWordExport() {
+    const wordBtn = document.getElementById("wordExportBtn");
+    const modal = document.getElementById("wordExportModal");
+    const docNameInput = document.getElementById("docNameInput");
+    const saveLocationInput = document.getElementById("saveLocationInput");
+    const chooseLocationBtn = document.getElementById("chooseLocationBtn");
+    const cancelBtn = document.getElementById("cancelExportBtn");
+    const confirmBtn = document.getElementById("confirmExportBtn");
+
+    if (!wordBtn || !modal || !docNameInput || !saveLocationInput || !chooseLocationBtn || !cancelBtn || !confirmBtn) return;
+
+    docNameInput.value = `zvit-ditei-${getTodayForFileName()}`;
+
+    wordBtn.addEventListener("click", () => openWordModal(modal, docNameInput));
+    cancelBtn.addEventListener("click", () => closeWordModal(modal));
+
+    modal.addEventListener("click", (event) => {
+        if (event.target === modal) closeWordModal(modal);
+    });
+
+    chooseLocationBtn.addEventListener("click", async () => {
+        const picker = window.showDirectoryPicker;
+        if (typeof picker !== "function") {
+            alert("Вибір папки недоступний у цьому браузері. Буде використано стандартне збереження браузера.");
+            return;
+        }
+
+        try {
+            selectedDirectoryHandle = await picker();
+            saveLocationInput.value = selectedDirectoryHandle?.name ?? "Обрану папку";
+        } catch (error) {
+            if (error?.name !== "AbortError") {
+                console.error(error);
+                alert("Не вдалося обрати папку");
+            }
+        }
+    });
+
+    confirmBtn.addEventListener("click", async () => {
+        const fileName = normalizeFileName(docNameInput.value);
+
+        try {
+            await exportWordReport(fileName, reportRows, selectedDirectoryHandle);
+            closeWordModal(modal);
+        } catch (error) {
+            console.error(error);
+            alert("Помилка під час експорту у Word");
+        }
+    });
+}
+
+function openWordModal(modal, docNameInput) {
+    modal.classList.add("is-open");
+    modal.setAttribute("aria-hidden", "false");
+    docNameInput.focus();
+    docNameInput.select();
+}
+
+function closeWordModal(modal) {
+    modal.classList.remove("is-open");
+    modal.setAttribute("aria-hidden", "true");
+}
+
+async function exportWordReport(fileName, rows, directoryHandle) {
+    const html = buildWordHtml(rows);
+
+    if (directoryHandle && typeof directoryHandle.getFileHandle === "function") {
+        const fileHandle = await directoryHandle.getFileHandle(`${fileName}.doc`, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(html);
+        await writable.close();
+        return;
+    }
+
+    if (typeof window.showSaveFilePicker === "function") {
+        const fileHandle = await window.showSaveFilePicker({
+            suggestedName: `${fileName}.doc`,
+            types: [{
+                description: "Word document",
+                accept: { "application/msword": [".doc"] }
+            }]
+        });
+
+        const writable = await fileHandle.createWritable();
+        await writable.write(html);
+        await writable.close();
+        return;
+    }
+
+    const blob = new Blob([html], { type: "application/msword" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+
+    link.href = url;
+    link.download = `${fileName}.doc`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(url);
+}
+
+function buildWordHtml(rows) {
+    const today = formatDateUA(new Date().toISOString());
+    const rowsToExport = rows.length
+        ? rows
+        : Array.from({ length: 5 }, () => ({}));
+
+    const reportRowsHtml = rowsToExport.map((row, index) => {
+        const fullName = formatFullName(row);
+        const birthDate = formatDateUA(row.birth_date);
+
+        return `
+<tr>
+<td class="ncol">${index + 1}</td>
+<td>${fullName || "&nbsp;"}</td>
+<td>${birthDate || "&nbsp;"}</td>
+<td>${row.category ?? "&nbsp;"}</td>
+<td>${row.notes ?? "&nbsp;"}</td>
+</tr>`;
+    }).join("");
+
+    return `<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<style>
+    body { font-family: 'Times New Roman', serif; color: #173f7d; margin: 28px 40px; }
+    .title { text-align: center; font-size: 18pt; font-weight: 700; line-height: 1.25; }
+    .subtitle { text-align: center; margin-top: 28px; font-size: 17pt; font-weight: 700; }
+    .subtitle2 { text-align: center; margin-top: 4px; font-size: 16pt; font-weight: 700; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-top: 42px; color: #000; font-size: 14pt; mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    th, td { border: 1px solid #000; padding: 4px 6px; vertical-align: top; line-height: 1.15; }
+    th { text-align: left; font-weight: 700; }
+    .ncol { width: 46px; text-align: center; }
+    .name-col { width: 34%; }
+    .date-col { width: 20%; }
+    .cat-col { width: 21%; }
+    .note-col { width: 21%; }
+    .footer { margin-top: 72px; color: #000; font-size: 14pt; display: flex; justify-content: space-between; gap: 20px; }
+</style>
+</head>
+<body>
+    <div class="title">Дарʼївський заклад дошкільної освіти Дарʼївської сільської ради Херсонського району Херсонської області</div>
+    <div class="subtitle">ЗВІТ</div>
+    <div class="subtitle2">про дітей xxx категорії станом на ${today}</div>
+
+    <table>
+        <tr>
+            <th class="ncol">№</th>
+            <th class="name-col">ПІБ дитини</th>
+            <th class="date-col">Дата народження</th>
+            <th class="cat-col">Категорія</th>
+            <th class="note-col">Примітки</th>
+        </tr>
+        ${reportRowsHtml}
+    </table>
+
+    <div class="footer">
+        <span>Директор _______________________</span>
+        <span>Оксана ЗЕЛІНСЬКА</span>
+    </div>
+</body>
+</html>`;
+}
+
+function getTodayForFileName() {
+    const today = new Date();
+    const dd = String(today.getDate()).padStart(2, "0");
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const yyyy = today.getFullYear();
+
+    return `${yyyy}-${mm}-${dd}`;
+}
+
+function normalizeFileName(name) {
+    const normalized = String(name || "").trim().replace(/[\\/:*?"<>|]+/g, "-");
+    return normalized || `zvit-ditei-${getTodayForFileName()}`;
 }
 
 /* ================= HELPERS ================= */
