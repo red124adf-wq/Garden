@@ -9,6 +9,10 @@
 </head>
 <body>
 
+<div class="report-toolbar">
+    <button id="wordExportBtn" type="button" class="word-button">Word</button>
+</div>
+
 <h1>Звіт по дітях</h1>
 <div id="meta"></div>
 
@@ -25,6 +29,26 @@
     </thead>
     <tbody></tbody>
 </table>
+
+<div id="wordExportModal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="wordModalTitle">
+        <h2 id="wordModalTitle">Експорт у Word</h2>
+
+        <label class="modal-label" for="docNameInput">Назва документа</label>
+        <input id="docNameInput" class="modal-input" type="text" placeholder="zvit-ditei" />
+
+        <label class="modal-label" for="saveLocationInput">Місце збереження</label>
+        <div class="location-row">
+            <input id="saveLocationInput" class="modal-input" type="text" placeholder="Не обрано" readonly />
+            <button id="chooseLocationBtn" type="button" class="secondary-button">Обрати</button>
+        </div>
+
+        <div class="modal-actions">
+            <button id="cancelExportBtn" type="button" class="secondary-button">Скасувати</button>
+            <button id="confirmExportBtn" type="button" class="word-button">Зберегти</button>
+        </div>
+    </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="core.js"></script>
