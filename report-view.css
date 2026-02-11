@@ -5,6 +5,39 @@ body {
     color: #000;
 }
 
+.report-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.word-button,
+.secondary-button {
+    border: 1px solid #183a71;
+    border-radius: 6px;
+    padding: 8px 14px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.word-button {
+    background: #2f67c1;
+    color: #fff;
+}
+
+.word-button:hover {
+    background: #24539f;
+}
+
+.secondary-button {
+    background: #fff;
+    color: #183a71;
+}
+
+.secondary-button:hover {
+    background: #edf3ff;
+}
+
 h1 {
     margin-bottom: 12px;
     font-size: 28px;
@@ -28,4 +61,59 @@ td {
 
 th {
     background: #f5f5f5;
+}
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-overlay.is-open {
+    display: flex;
+}
+
+.modal-card {
+    width: min(520px, calc(100vw - 32px));
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+.modal-card h2 {
+    margin: 0 0 14px;
+    font-size: 24px;
+}
+
+.modal-label {
+    display: block;
+    margin: 12px 0 6px;
+    font-size: 16px;
+}
+
+.modal-input {
+    width: 100%;
+    border: 1px solid #b9bfd0;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 15px;
+    font-family: inherit;
+}
+
+.location-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 8px;
+}
+
+.modal-actions {
+    margin-top: 18px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
 }
