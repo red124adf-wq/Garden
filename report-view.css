@@ -1,119 +1,223 @@
+/* ======================================================
+   BASE
+====================================================== */
+
 body {
     font-family: "Times New Roman", Times, serif;
-    padding: 20px;
-    background: #fff;
+    background: #ffffff;
     color: #000;
+    margin: 0;
+    padding: 20px 24px;
 }
 
-.report-toolbar {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 10px;
+
+/* ======================================================
+   PAGE REPORT (ЕКРАННА ВЕРСІЯ)
+====================================================== */
+
+.report-page {
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
-.word-button,
-.secondary-button {
-    border: 1px solid #183a71;
-    border-radius: 6px;
-    padding: 8px 14px;
-    cursor: pointer;
-    font-size: 15px;
-}
-
-.word-button {
-    background: #2f67c1;
-    color: #fff;
-}
-
-.word-button:hover {
-    background: #24539f;
-}
-
-.secondary-button {
-    background: #fff;
-    color: #183a71;
-}
-
-.secondary-button:hover {
-    background: #edf3ff;
-}
-
-h1 {
-    margin-bottom: 12px;
+.page-title {
+    margin-bottom: 14px;
     font-size: 28px;
     font-weight: 700;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 14px;
+.page-meta {
+    margin-bottom: 12px;
 }
 
-th,
-td {
+.page-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+    font-size: 16px;
+}
+
+.page-table th,
+.page-table td {
     border: 1px solid #000;
     padding: 6px 8px;
     text-align: left;
     vertical-align: top;
-    font-size: 16px;
 }
 
-th {
+.page-table th {
     background: #f5f5f5;
+    font-weight: 700;
 }
 
-.modal-overlay {
+
+/* ======================================================
+   PDF BUTTON
+====================================================== */
+
+.pdf-btn {
     position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.45);
-    display: none;
-    align-items: center;
-    justify-content: center;
-    z-index: 999;
-}
-
-.modal-overlay.is-open {
-    display: flex;
-}
-
-.modal-card {
-    width: min(520px, calc(100vw - 32px));
-    background: #fff;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
-}
-
-.modal-card h2 {
-    margin: 0 0 14px;
-    font-size: 24px;
-}
-
-.modal-label {
-    display: block;
-    margin: 12px 0 6px;
-    font-size: 16px;
-}
-
-.modal-input {
-    width: 100%;
-    border: 1px solid #b9bfd0;
+    top: 16px;
+    right: 24px;
+    padding: 10px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    background: #173f7d;
+    color: #fff;
+    border: none;
     border-radius: 6px;
-    padding: 8px 10px;
-    font-size: 15px;
-    font-family: inherit;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    transition: background 0.2s ease, transform 0.1s ease;
 }
 
-.location-row {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 8px;
+.pdf-btn:hover {
+    background: #0f2c56;
 }
 
-.modal-actions {
-    margin-top: 18px;
+.pdf-btn:active {
+    transform: translateY(1px);
+}
+
+
+/* ======================================================
+   PDF DOCUMENT (ДРУКОВА ВЕРСІЯ A4 PORTRAIT)
+====================================================== */
+
+.pdf-document {
+    width: 794px;
+    margin: 0 auto;
+    background: #fff;
+}
+
+.pdf-inner {
+    width: 100%;
+}
+
+.pdf-page {
+    padding: 76px 40px 76px 110px;
+    box-sizing: border-box;
+}
+
+/* ===== Заголовки ===== */
+
+.pdf-title-top {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #3c78b4;
+    line-height: 1.35;
+}
+
+.pdf-main-title {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.pdf-subtitle {
+    text-align: center;
+    margin: 12px 0 28px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* ======================================================
+   PDF TABLE
+====================================================== */
+
+.pdf-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    table-layout: fixed;
+}
+
+/* Забороняємо розрив рядків */
+.pdf-table tr {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
+/* Повторювати заголовок таблиці на новій сторінці */
+.pdf-table thead {
+    display: table-header-group;
+}
+
+/* Межі таблиці */
+.pdf-table th,
+.pdf-table td {
+    border: 1px solid #000;
+    padding: 6px 8px;
+    vertical-align: top;
+}
+
+.pdf-table th {
+    font-weight: 700;
+    text-align: left;
+}
+
+/* ===== Пропорції колонок ===== */
+
+/* № */
+.pdf-table th:nth-child(1),
+.pdf-table td:nth-child(1) {
+    width: 6%;
+    text-align: center;
+}
+
+/* ПІБ */
+.pdf-table th:nth-child(2),
+.pdf-table td:nth-child(2) {
+    width: 36%;
+}
+
+/* Дата */
+.pdf-table th:nth-child(3),
+.pdf-table td:nth-child(3) {
+    width: 14%;
+}
+
+/* Група */
+.pdf-table th:nth-child(4),
+.pdf-table td:nth-child(4) {
+    width: 12%;
+}
+
+/* Примітка */
+.pdf-table th:nth-child(5),
+.pdf-table td:nth-child(5) {
+    width: 32%;
+}
+
+
+/* ======================================================
+   PDF FOOTER (ПІДПИС)
+====================================================== */
+
+.pdf-footer {
+    margin-top: 80px;
     display: flex;
-    justify-content: flex-end;
-    gap: 8px;
+    justify-content: space-between;
+    font-size: 18px;
+}
+
+
+/* ======================================================
+   PRINT OPTIMIZATION
+====================================================== */
+
+@media print {
+
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    .pdf-btn {
+        display: none;
+    }
 }
