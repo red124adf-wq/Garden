@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="uk">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,52 +8,59 @@
 
     <link rel="stylesheet" href="report-view.css">
 </head>
+
 <body>
 
-<div class="report-toolbar">
-    <button id="wordExportBtn" type="button" class="word-button">Word</button>
-</div>
+    <!-- ================= PDF BUTTON ================= -->
+    <button id="pdfBtn" class="pdf-btn">
+        Зберегти PDF
+    </button>
 
-<h1>Звіт по дітях</h1>
-<div id="meta"></div>
 
-<table id="reportTable">
-    <thead>
-        <tr>
-            <th>№</th>
-            <th>ПІБ дитини</th>
-            <th>Дата народження</th>
-            <th>Адреса проживання</th>
-            <th>ПІБ батьків</th>
-            <th>Телефон батьків</th>
-        </tr>
-    </thead>
-    <tbody></tbody>
-</table>
+    <!-- ================= PAGE REPORT (ЕКРАННА ВЕРСІЯ — НЕ ЧІПАЄМО) ================= -->
+    <main class="report-page">
 
-<div id="wordExportModal" class="modal-overlay" aria-hidden="true">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="wordModalTitle">
-        <h2 id="wordModalTitle">Експорт у Word</h2>
+        <h1 class="page-title">
+            Звіт по дітях
+        </h1>
 
-        <label class="modal-label" for="docNameInput">Назва документа</label>
-        <input id="docNameInput" class="modal-input" type="text" placeholder="zvit-ditei" />
+        <div id="meta" class="page-meta"></div>
 
-        <label class="modal-label" for="saveLocationInput">Місце збереження</label>
-        <div class="location-row">
-            <input id="saveLocationInput" class="modal-input" type="text" placeholder="Не обрано" readonly />
-            <button id="chooseLocationBtn" type="button" class="secondary-button">Обрати</button>
+        <table id="reportTable" class="page-table">
+            <thead>
+                <tr>
+                    <th>№</th>
+                    <th>ПІБ дитини</th>
+                    <th>Дата народження</th>
+                    <th>Адреса проживання</th>
+                    <th>ПІБ батьків</th>
+                    <th>Телефон батьків</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+    </main>
+
+
+    <!-- ================= PDF TEMPLATE (ОКРЕМИЙ ДОКУМЕНТ ДЛЯ ЕКСПОРТУ) ================= -->
+
+    <!-- ВАЖЛИВО: width сторінки задається в CSS.
+         padding тепер живе всередині .pdf-inner,
+         щоб не ламати масштабування PDF -->
+    <section id="pdf-template" class="pdf-document" style="display: none;">
+        <div class="pdf-inner">
+            <!-- Тут JS буде генерувати PDF-контент -->
         </div>
+    </section>
 
-        <div class="modal-actions">
-            <button id="cancelExportBtn" type="button" class="secondary-button">Скасувати</button>
-            <button id="confirmExportBtn" type="button" class="word-button">Зберегти</button>
-        </div>
-    </div>
-</div>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="core.js"></script>
-<script src="report-view.js"></script>
+    <!-- ================= SCRIPTS ================= -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="core.js"></script>
+    <script src="report-view.js"></script>
 
 </body>
+
 </html>
