@@ -18,16 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // первинна перевірка
-  updateAuthUI();
-
-  // реагує на логін / логаут
-  window.supabaseClient.auth.onAuthStateChange(() => {
-    updateAuthUI();
-  });
-
-  // логін
-  document.getElementById("loginBtn")?.addEventListener("click", async () => {
+  async function handleLogin() {
     const email = document.getElementById("email")?.value.trim();
     const password = document.getElementById("password")?.value.trim();
 
@@ -36,19 +27,42 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    const { error } =
-      await window.supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
+    const { error } = await window.supabaseClient.auth.signInWithPassword({
+      email,
+      password
+    });
 
     if (error) {
-      alert("Помилка входу");
+      alert("Помилка входу. Перевірте email і пароль.");
+    }
+  }
+
+  // первинна перевірка
+  updateAuthUI();
+
+  // реагує на логін / логаут
+  window.supabaseClient.auth.onAuthStateChange(() => {
+    updateAuthUI();
+  });
+
+  // логін по кнопці
+  document.getElementById("loginBtn")?.addEventListener("click", handleLogin);
+
+  // логін по Enter в полі паролю
+  document.getElementById("password")?.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleLogin();
     }
   });
 
-  // логаут
-  document.getElementById("logoutBtn")?.addEventListener("click", async () => {
+  // логаут (працює і для динамічно підвантаженого sidebar)
+  document.addEventListener("click", async (event) => {
+    const logoutButton = event.target.closest("#logoutBtn");
+    if (!logoutButton) return;
+
+    event.preventDefault();
     await window.supabaseClient.auth.signOut();
+    window.location.href = "index.html";
   });
 });

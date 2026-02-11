@@ -128,6 +128,27 @@ body {
     font-weight: 700;
 }
 
+
+.menu-btn.logout-btn {
+    margin-top: auto;
+    border: 2px solid var(--accent);
+    font-weight: 700;
+}
+
+.menu-btn.logout-btn:hover {
+    background: var(--accent);
+    color: #fff;
+}
+
+.menu-btn:focus-visible,
+.year-btn:focus-visible,
+.auth button:focus-visible,
+.auth input:focus-visible,
+.calendar-value:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--accent) 50%, #000 15%);
+    outline-offset: 2px;
+}
+
 .content {
     flex: 1;
     padding: 30px;
@@ -352,6 +373,16 @@ body.season-winter {
     --accent: #6fa8ff;
     --sidebar-bg: #dfefff;
     --bg-image: url("winter.png");
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
 }
 
 @media (max-width: 980px) {

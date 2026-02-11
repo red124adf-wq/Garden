@@ -162,13 +162,10 @@ nextBtn.onclick = async () => {
 /* ======================================================
    MENU
 ====================================================== */
-document.querySelectorAll(".menu-btn").forEach((btn) => {
-  btn.onclick = () => {
-    document
-      .querySelectorAll(".menu-btn")
-      .forEach((menuBtn) => menuBtn.classList.remove("active"));
-    btn.classList.add("active");
-  };
+document.querySelectorAll(".menu-btn[href='#']").forEach((btn) => {
+  btn.addEventListener("click", (event) => {
+    event.preventDefault();
+  });
 });
 
 /* ======================================================
