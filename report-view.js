@@ -1,15 +1,16 @@
 /* ======================================================
-   REPORT VIEW (QUERY + TABLE)
+   REPORT VIEW + PDF EXPORT (STABLE VERSION)
 ====================================================== */
 
 document.addEventListener("DOMContentLoaded", initReportView);
 
 let reportRows = [];
-let selectedDirectoryHandle = null;
+let currentParams = null;
 
 /* ================= INIT ================= */
 
 async function initReportView() {
+
     if (typeof window.requireAuth === "function") {
         const authorized = await window.requireAuth();
         if (!authorized) return;
@@ -21,13 +22,12 @@ async function initReportView() {
         return;
     }
 
-    const params = new URLSearchParams(window.location.search);
+    currentParams = new URLSearchParams(window.location.search);
 
     try {
-        const data = await fetchReportData(supabase, params);
-        reportRows = data;
-        renderTable(data);
-        setupWordExport();
+        reportRows = await fetchReportData(supabase, currentParams);
+        renderTable(reportRows);
+        setupPDFExport();
     } catch (err) {
         console.error(err);
         alert("Помилка завантаження звіту");
@@ -37,6 +37,7 @@ async function initReportView() {
 /* ================= DATA ================= */
 
 async function fetchReportData(supabase, params) {
+
     let query = supabase
         .from("report_children_full")
         .select("*");
@@ -47,14 +48,15 @@ async function fetchReportData(supabase, params) {
     applyFlags(query, params);
 
     const { data, error } = await query;
-
     if (error) throw error;
+
     return data ?? [];
 }
 
 /* ================= FILTERS ================= */
 
 function applyBasicFilters(query, params) {
+
     const gender = params.get("gender");
     const birthFrom = params.get("birth_from");
     const birthTo = params.get("birth_to");
@@ -88,6 +90,7 @@ function applyTerritory(query, params) {
 }
 
 function applyFlags(query, params) {
+
     const flagMap = {
         orphan: "orphan",
         inclusive: "inclusion",
@@ -103,234 +106,179 @@ function applyFlags(query, params) {
         missing: "missing_father"
     };
 
-    params.getAll("flags").forEach((flag) => {
+    params.getAll("flags").forEach(flag => {
         const column = flagMap[flag];
         if (column) query.eq(column, true);
     });
 }
 
-/* ================= TABLE ================= */
+/* ================= TABLE (ЕКРАННА ВЕРСІЯ - НЕ ЧІПАЄМО) ================= */
 
 function renderTable(rows) {
+
     const tbody = document.querySelector("#reportTable tbody");
     if (!tbody) return;
 
     tbody.innerHTML = "";
 
     if (!rows.length) {
+        tbody.innerHTML = `<tr><td colspan="6">Дані не знайдено</td></tr>`;
+        return;
+    }
+
+    rows.forEach((row, index) => {
+
         const tr = document.createElement("tr");
-        tr.innerHTML = `<td colspan="6">Дані не знайдено</td>`;
+
+        tr.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${formatFullName(row)}</td>
+            <td>${formatDateUA(row.birth_date)}</td>
+            <td>${formatAddress(row)}</td>
+            <td>${row.parents_full_name ?? ""}</td>
+            <td>${row.phone ?? ""}</td>
+        `;
+
         tbody.appendChild(tr);
-        return;
-    }
-
-    const sortedRows = [...rows].sort((a, b) => {
-        const dateA = parseDate(a.birth_date);
-        const dateB = parseDate(b.birth_date);
-        return dateB - dateA;
-    });
-
-    sortedRows.forEach((row, index) => {
-        tbody.appendChild(createRow(row, index + 1));
     });
 }
 
-function createRow(row, index) {
-    const tr = document.createElement("tr");
+/* ================= PDF EXPORT ================= */
 
-    tr.innerHTML = `
-        <td>${index}</td>
-        <td>${formatFullName(row)}</td>
-        <td>${formatDateUA(row.birth_date)}</td>
-        <td>${formatAddress(row)}</td>
-        <td>${row.parents_full_name ?? ""}</td>
-        <td>${row.phone ?? ""}</td>
-    `;
+function setupPDFExport() {
 
-    return tr;
+    const btn = document.getElementById("pdfBtn");
+    if (!btn) return;
+
+    btn.addEventListener("click", generatePDF);
 }
 
+function generatePDF() {
 
-/* ================= WORD EXPORT ================= */
+    const container = document.getElementById("pdf-template");
 
-function setupWordExport() {
-    const wordBtn = document.getElementById("wordExportBtn");
-    const modal = document.getElementById("wordExportModal");
-    const docNameInput = document.getElementById("docNameInput");
-    const saveLocationInput = document.getElementById("saveLocationInput");
-    const chooseLocationBtn = document.getElementById("chooseLocationBtn");
-    const cancelBtn = document.getElementById("cancelExportBtn");
-    const confirmBtn = document.getElementById("confirmExportBtn");
+    container.innerHTML = buildPdfLayout();
+    container.style.display = "block";
 
-    if (!wordBtn || !modal || !docNameInput || !saveLocationInput || !chooseLocationBtn || !cancelBtn || !confirmBtn) return;
-
-    docNameInput.value = `zvit-ditei-${getTodayForFileName()}`;
-
-    wordBtn.addEventListener("click", () => openWordModal(modal, docNameInput));
-    cancelBtn.addEventListener("click", () => closeWordModal(modal));
-
-    modal.addEventListener("click", (event) => {
-        if (event.target === modal) closeWordModal(modal);
-    });
-
-    chooseLocationBtn.addEventListener("click", async () => {
-        const picker = window.showDirectoryPicker;
-        if (typeof picker !== "function") {
-            alert("Вибір папки недоступний у цьому браузері. Буде використано стандартне збереження браузера.");
-            return;
+    const options = {
+        margin: 0,                        // ВАЖЛИВО — поля тільки через CSS
+        filename: `Звіт-${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: "jpeg", quality: 1 },
+        html2canvas: { 
+            scale: 2,
+            useCORS: true
+        },
+        pagebreak: { mode: ["css"] },
+        jsPDF: {
+            unit: "mm",
+            format: "a4",
+            orientation: "portrait"
         }
+    };
 
-        try {
-            selectedDirectoryHandle = await picker();
-            saveLocationInput.value = selectedDirectoryHandle?.name ?? "Обрану папку";
-        } catch (error) {
-            if (error?.name !== "AbortError") {
-                console.error(error);
-                alert("Не вдалося обрати папку");
-            }
-        }
-    });
-
-    confirmBtn.addEventListener("click", async () => {
-        const fileName = normalizeFileName(docNameInput.value);
-
-        try {
-            await exportWordReport(fileName, reportRows, selectedDirectoryHandle);
-            closeWordModal(modal);
-        } catch (error) {
-            console.error(error);
-            alert("Помилка під час експорту у Word");
-        }
-    });
-}
-
-function openWordModal(modal, docNameInput) {
-    modal.classList.add("is-open");
-    modal.setAttribute("aria-hidden", "false");
-    docNameInput.focus();
-    docNameInput.select();
-}
-
-function closeWordModal(modal) {
-    modal.classList.remove("is-open");
-    modal.setAttribute("aria-hidden", "true");
-}
-
-async function exportWordReport(fileName, rows, directoryHandle) {
-    const html = buildWordHtml(rows);
-
-    if (directoryHandle && typeof directoryHandle.getFileHandle === "function") {
-        const fileHandle = await directoryHandle.getFileHandle(`${fileName}.doc`, { create: true });
-        const writable = await fileHandle.createWritable();
-        await writable.write(html);
-        await writable.close();
-        return;
-    }
-
-    if (typeof window.showSaveFilePicker === "function") {
-        const fileHandle = await window.showSaveFilePicker({
-            suggestedName: `${fileName}.doc`,
-            types: [{
-                description: "Word document",
-                accept: { "application/msword": [".doc"] }
-            }]
+    html2pdf()
+        .set(options)
+        .from(container)
+        .save()
+        .then(() => {
+            container.style.display = "none";
         });
+}
 
-        const writable = await fileHandle.createWritable();
-        await writable.write(html);
-        await writable.close();
-        return;
+/* ================= PDF LAYOUT ================= */
+
+function buildPdfLayout() {
+
+    const today = formatDateUA(new Date().toISOString());
+    const subtitle = buildPdfSubtitle(currentParams);
+
+    const rowsHtml = reportRows.map((row, index) => `
+        <tr>
+            <td>${index + 1}</td>
+            <td>${formatFullName(row)}</td>
+            <td>${formatDateUA(row.birth_date)}</td>
+            <td>${row.group_name ?? ""}</td>
+            <td>${buildPdfNote(row)}</td>
+        </tr>
+    `).join("");
+
+    return `
+        <div class="pdf-inner">
+
+            <div class="pdf-page">
+
+                <div class="pdf-title-top">
+                    Дар’ївський заклад дошкільної освіти Дар’ївської сільської ради<br>
+                    Херсонського району Херсонської області
+                </div>
+
+                <div class="pdf-main-title">
+                    ЗВІТ
+                </div>
+
+                <div class="pdf-subtitle">
+                    ${subtitle} станом на ${today} року
+                </div>
+
+                <table class="pdf-table">
+                    <thead>
+                        <tr>
+                            <th>№ з/п</th>
+                            <th>ПІБ дитини</th>
+                            <th>Дата народження</th>
+                            <th>Група</th>
+                            <th>Примітка</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rowsHtml}
+                    </tbody>
+                </table>
+
+                <div class="pdf-footer">
+                    <div>Директор ________________________</div>
+                    <div>Оксана ПЕТРОВА</div>
+                </div>
+
+            </div>
+
+        </div>
+    `;
+}
+
+
+/* ================= SUBTITLE ================= */
+
+function buildPdfSubtitle(params) {
+
+    const gender = params.get("gender");
+    const schoolYear = params.get("school_year");
+
+    let text = "про дітей";
+
+    if (gender === "female") text = "про дівчаток";
+    if (gender === "male") text = "про хлопчиків";
+
+    if (schoolYear) {
+        text += ` ${schoolYear} навчального року`;
+    } else {
+        text += " дошкільного віку";
     }
 
-    const blob = new Blob([html], { type: "application/msword" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = `${fileName}.doc`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    URL.revokeObjectURL(url);
+    return text;
 }
 
-function buildWordHtml(rows) {
-    const today = formatDateUA(new Date().toISOString());
-    const reportRowsHtml = rows.length
-        ? rows.slice(0, 5).map((row, index) => `
-            <tr>
-                <td class="ncol">${index + 1}</td>
-                <td>${formatFullName(row)}</td>
-                <td>${formatDateUA(row.birth_date)}</td>
-                <td>${row.category ?? ""}</td>
-                <td>${row.notes ?? ""}</td>
-            </tr>
-        `).join("")
-        : Array.from({ length: 5 }, (_, index) => `
-            <tr>
-                <td class="ncol">${index + 1}</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-            </tr>
-        `).join("");
+/* ================= PDF NOTE ================= */
 
-    return `<!DOCTYPE html>
-<html lang="uk">
-<head>
-<meta charset="utf-8">
-<style>
-    body { font-family: 'Times New Roman', serif; color: #173f7d; margin: 42px; }
-    .title { text-align: center; font-size: 20px; font-weight: 700; line-height: 1.35; }
-    .subtitle { text-align: center; margin-top: 36px; font-size: 19px; font-weight: 700; }
-    .subtitle2 { text-align: center; margin-top: 6px; font-size: 18px; font-weight: 700; }
-    table { width: 100%; border-collapse: collapse; margin-top: 56px; color: #000; font-size: 18px; }
-    th, td { border-bottom: 1px solid #000; padding: 10px 8px; vertical-align: bottom; }
-    th { border-top: 1px solid #000; text-align: left; }
-    .ncol { width: 45px; }
-    .footer { margin-top: 90px; color: #000; font-size: 32px; display: flex; justify-content: space-between; }
-</style>
-</head>
-<body>
-    <div class="title">Дарʼївський заклад дошкільної освіти Дарʼївської сільської ради Херсонського району Херсонської області</div>
-    <div class="subtitle">ЗВІТ</div>
-    <div class="subtitle2">про дітей xxx категорії станом на ${today}</div>
+function buildPdfNote(row) {
 
-    <table>
-        <thead>
-            <tr>
-                <th class="ncol">№</th>
-                <th>ПІБ дитини</th>
-                <th>Дата народження</th>
-                <th>Категорія</th>
-                <th>Примітки</th>
-            </tr>
-        </thead>
-        <tbody>${reportRowsHtml}</tbody>
-    </table>
+    const notes = [];
 
-    <div class="footer">
-        <span>Директор _______________________</span>
-        <span>Оксана ЗЕЛІНСЬКА</span>
-    </div>
-</body>
-</html>`;
-}
+    if (row.low_income) notes.push("Малозабезпечена сім’я");
+    if (row.idp) notes.push("ВПО");
+    if (row.parents_military) notes.push("батьки військовослужбовці");
 
-function getTodayForFileName() {
-    const today = new Date();
-    const dd = String(today.getDate()).padStart(2, "0");
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const yyyy = today.getFullYear();
-
-    return `${yyyy}-${mm}-${dd}`;
-}
-
-function normalizeFileName(name) {
-    const normalized = String(name || "").trim().replace(/[\\/:*?"<>|]+/g, "-");
-    return normalized || `zvit-ditei-${getTodayForFileName()}`;
+    return notes.join(", ");
 }
 
 /* ================= HELPERS ================= */
@@ -343,25 +291,13 @@ function formatFullName(row) {
 
 function formatAddress(row) {
     return [row.settlement, row.street, row.house, row.apartment]
-        .filter((part) => part && String(part).trim())
+        .filter(Boolean)
         .join(", ");
-}
-
-
-function parseDate(value) {
-    if (!value) return new Date(0);
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? new Date(0) : date;
 }
 
 function formatDateUA(value) {
     if (!value) return "";
-    const date = parseDate(value);
-    if (date.getTime() === 0) return "";
-
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = date.getFullYear();
-
-    return `${day}.${month}.${year}`;
+    const date = new Date(value);
+    if (isNaN(date)) return "";
+    return `${String(date.getDate()).padStart(2, "0")}.${String(date.getMonth() + 1).padStart(2, "0")}.${date.getFullYear()}`;
 }
