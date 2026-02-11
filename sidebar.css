@@ -77,6 +77,24 @@
   cursor: not-allowed;
 }
 
+
+.sidebar .logout-btn {
+  margin-top: auto;
+  border: 2px solid var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sidebar .logout-btn:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.sidebar .menu-btn:focus-visible {
+  outline: 3px solid rgba(255, 255, 255, 0.85);
+  outline-offset: 2px;
+}
+
 @media (max-width: 980px) {
   .sidebar {
     position: static;
