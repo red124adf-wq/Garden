@@ -1,0 +1,100 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>🌿 МІЙ УЛЮБЛЕНИЙ ДІМ — Вхід</title>
+<link rel="stylesheet" href="login.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+<div class="login-wrap">
+  <div class="logo">🌿</div>
+  <h1>МІЙ УЛЮБЛЕНИЙ ДІМ</h1>
+  <p class="subtitle">Система моніторингу</p>
+
+  <div class="card">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="email" placeholder="your@email.com" autocomplete="email">
+    </div>
+    <div class="form-group">
+      <label>Пароль</label>
+      <input type="password" id="password" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <div class="error" id="error"></div>
+    <button class="login-btn" id="loginBtn" onclick="login()">УВІЙТИ</button>
+  </div>
+
+  <div class="session-box" id="sessionBox" style="display:none;">
+    <div class="session-text">Ви вже увійшли.</div>
+    <button class="login-btn" id="continueBtn" onclick="continueSession()">ПРОДОВЖИТИ</button>
+    <button class="login-btn secondary" onclick="logoutAndStay()">ЗМІНИТИ АКАУНТ</button>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://wesibzuxkytajteyejmw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc2lienV4a3l0YWp0ZXllam13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDUwNzIsImV4cCI6MjA4NTc4MTA3Mn0.eRymrXGUaA0HXAFEuyZwjbSJLEOnNZuG0O2ux_cyP6U';
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+let currentUserId = null;
+
+async function checkSession() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (session) {
+    currentUserId = session.user.id;
+    document.getElementById('sessionBox').style.display = 'flex';
+  }
+}
+
+async function redirect(userId) {
+  const { data } = await sb.from('profiles').select('role').eq('id', userId).single();
+  if (data?.role === 'admin') {
+    window.location.href = 'dashboard.html';
+  } else {
+    window.location.href = 'butterfly.html';
+  }
+}
+
+async function login() {
+  const email    = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const btn      = document.getElementById('loginBtn');
+  const err      = document.getElementById('error');
+
+  err.textContent = '';
+  btn.textContent = 'Завантаження...';
+  btn.disabled    = true;
+
+  const { data, error } = await sb.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    err.textContent = 'Невірний email або пароль';
+    btn.textContent = 'УВІЙТИ';
+    btn.disabled    = false;
+    return;
+  }
+
+  redirect(data.user.id);
+}
+
+function continueSession() {
+  if (currentUserId) redirect(currentUserId);
+}
+
+async function logoutAndStay() {
+  await sb.auth.signOut();
+  currentUserId = null;
+  document.getElementById('sessionBox').style.display = 'none';
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') login();
+});
+
+checkSession();
+</script>
+</body>
+</html>

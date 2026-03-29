@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>🦋 Моє світло</title>
+<link rel="stylesheet" href="butterfly.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mqtt/5.3.4/mqtt.min.js"></script>
+</head>
+<body>
+
+<!-- Анімовані метелики на фоні -->
+<div class="butterflies" id="butterflies"></div>
+
+<div class="wrap">
+
+  <!-- Заголовок -->
+  <div class="header">
+    <div class="title">🦋 Моє світло</div>
+    <button class="logout-btn" onclick="logout()">Вийти</button>
+  </div>
+
+  <!-- Головний індикатор -->
+  <div class="main-card" id="mainCard">
+    <div class="glow-ring" id="glowRing"></div>
+    <div class="main-icon" id="mainIcon">💡</div>
+    <div class="main-status" id="mainStatus">Перевіряємо...</div>
+    <div class="main-sub" id="mainSub">з'єднання...</div>
+  </div>
+
+  <!-- Остання подія -->
+  <div class="info-card">
+    <div class="info-title">⏰ Остання зміна</div>
+    <div class="last-event" id="lastEvent">—</div>
+  </div>
+
+  <!-- Історія за 24 години -->
+  <div class="info-card">
+    <div class="info-title">📋 Сьогодні</div>
+    <div id="historyList"><div class="loading">Завантаження...</div></div>
+  </div>
+
+</div>
+
+<script src="auth.js"></script>
+<script src="butterfly.js"></script>
+</body>
+</html>
