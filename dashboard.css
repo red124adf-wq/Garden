@@ -1,4 +1,4 @@
-﻿@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600&display=swap');
 
 :root {
   --bg:     #0a0e1a;
@@ -33,6 +33,7 @@ h1 {
   color: var(--cyan);
   text-shadow: 0 0 16px var(--cyan);
   margin-bottom: 12px;
+  word-break: break-word;
 }
 
 .status-bar {
@@ -72,6 +73,7 @@ h1 {
   padding: 16px;
   margin: 0 auto 14px;
   max-width: 920px;
+  width: 100%;
   box-shadow: var(--shadow);
 }
 
@@ -351,8 +353,31 @@ h1 {
 }
 
 @media (max-width: 600px) {
-  .status-bar { flex-direction: column; align-items: flex-start; }
+  body { padding: 10px; }
+
+  h1 {
+    font-size: 18px;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  .status-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 11px;
+    gap: 6px;
+  }
+
+  .card { padding: 14px; }
+
+  .sensors {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .sv { font-size: 20px; }
+
   .form-row { grid-template-columns: 1fr; }
   .form-row input[type="number"] { width: 100%; }
   .relay-row { flex-direction: column; align-items: flex-start; }
+  .relay-controls { flex-wrap: wrap; }
 }
