@@ -388,3 +388,54 @@ h1 {
   .relay-row { flex-direction: column; align-items: flex-start; }
   .relay-controls { flex-wrap: wrap; }
 }
+
+/* ===== МОБІЛЬНА АДАПТАЦІЯ ===== */
+@media (max-width: 480px) {
+
+  .relay-row {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .relay-name {
+    font-size: 13px;
+  }
+
+  .relay-controls {
+    flex-wrap: nowrap;
+    gap: 4px;
+  }
+
+  .badge {
+    font-size: 9px;
+    padding: 2px 5px;
+  }
+
+  .btn {
+    font-size: 9px;
+    padding: 4px 7px;
+  }
+
+  .form-row {
+    flex-wrap: nowrap;
+    gap: 8px;
+  }
+
+  .form-row label {
+    font-size: 11px;
+  }
+
+  .form-row input[type=number] {
+    width: 58px;
+    font-size: 13px;
+    padding: 3px 4px;
+  }
+
+  .toggle-wrap {
+    gap: 5px;
+  }
+
+  .toggle-label {
+    font-size: 10px;
+  }
+}
