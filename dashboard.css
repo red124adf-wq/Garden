@@ -392,7 +392,7 @@ h1 {
 
   .card { padding: 12px; }
 
-  .sensors { grid-template-columns: repeat(2, 1fr); }
+  .sensors { grid-template-columns: repeat(4, 1fr); }
   .sv { font-size: 20px; }
   .relay-name { font-size: 13px; }
 
