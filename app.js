@@ -1,4 +1,4 @@
-﻿// =============================================
+// =============================================
 // CHILLS — Garden Monitor
 // js/app.js
 // =============================================
@@ -32,7 +32,7 @@ const CONFIG = {
 const RELAYS = [
   { key: 'light', topic: CONFIG.mqtt.topics.cmdLight, name: '💡 Світло'     },
   { key: 'hum',   topic: CONFIG.mqtt.topics.cmdHum,   name: '💧 Зволожувач' },
-  { key: 'fan',   topic: CONFIG.mqtt.topics.cmdFan,   name: '🌬 Вентилятор' },
+  { key: 'fan',   topic: CONFIG.mqtt.topics.cmdFan,   name: '🌀 Вентилятор' },
   { key: 'res',   topic: CONFIG.mqtt.topics.cmdRes,   name: '🔌 Резерв'     },
 ];
 
@@ -75,7 +75,7 @@ async function fetchOutages() {
   }
 }
 
-// ===== ПОБУДОВА ПАР Відключень =====
+// ===== ПОБУДОВА ПАР відключень =====
 function buildPairs(rows) {
   // Перетворюємо плоский список подій в пари OFF→ON
   const pairs = [];

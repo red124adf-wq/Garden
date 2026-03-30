@@ -1,9 +1,9 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>🌿 МІЙ УЛЮБЛЕНИЙ ДІМ — Вхід</title>
+<title>🌿 Chills — Вхід</title>
 <link rel="stylesheet" href="login.css">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -11,7 +11,7 @@
 
 <div class="login-wrap">
   <div class="logo">🌿</div>
-  <h1>МІЙ УЛЮБЛЕНИЙ ДІМ</h1>
+  <h1>CHILLS</h1>
   <p class="subtitle">Система моніторингу</p>
 
   <div class="card">
@@ -26,12 +26,6 @@
     <div class="error" id="error"></div>
     <button class="login-btn" id="loginBtn" onclick="login()">УВІЙТИ</button>
   </div>
-
-  <div class="session-box" id="sessionBox" style="display:none;">
-    <div class="session-text">Ви вже увійшли.</div>
-    <button class="login-btn" id="continueBtn" onclick="continueSession()">ПРОДОВЖИТИ</button>
-    <button class="login-btn secondary" onclick="logoutAndStay()">ЗМІНИТИ АКАУНТ</button>
-  </div>
 </div>
 
 <script>
@@ -39,14 +33,10 @@ const SUPABASE_URL = 'https://wesibzuxkytajteyejmw.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indlc2lienV4a3l0YWp0ZXllam13Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAyMDUwNzIsImV4cCI6MjA4NTc4MTA3Mn0.eRymrXGUaA0HXAFEuyZwjbSJLEOnNZuG0O2ux_cyP6U';
 
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-let currentUserId = null;
 
 async function checkSession() {
   const { data: { session } } = await sb.auth.getSession();
-  if (session) {
-    currentUserId = session.user.id;
-    document.getElementById('sessionBox').style.display = 'flex';
-  }
+  if (session) redirect(session.user.id);
 }
 
 async function redirect(userId) {
@@ -78,16 +68,6 @@ async function login() {
   }
 
   redirect(data.user.id);
-}
-
-function continueSession() {
-  if (currentUserId) redirect(currentUserId);
-}
-
-async function logoutAndStay() {
-  await sb.auth.signOut();
-  currentUserId = null;
-  document.getElementById('sessionBox').style.display = 'none';
 }
 
 document.addEventListener('keydown', e => {

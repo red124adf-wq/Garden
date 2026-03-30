@@ -1,4 +1,4 @@
-﻿// js/butterfly.js
+// js/butterfly.js
 
 const MQTT_BROKER = 'wss://9db95805f2e640a98a99663099434134.s1.eu.hivemq.cloud:8884/mqtt';
 const MQTT_USER   = 'esp32user';
@@ -75,7 +75,7 @@ async function fetchHistory() {
     renderHistory(rows);
   } catch (e) {
     document.getElementById('historyList').innerHTML =
-      '<div class="no-history">⚠️ Не вдалося завантажити</div>';
+      '<div class="no-history">⚠️ Не вдалось завантажити</div>';
   }
 }
 
@@ -159,14 +159,14 @@ function connectMQTT() {
     if (topic === 'chills/state') {
       try {
         const state = JSON.parse(msg);
-        // power: true = є 220В
+        // power: false = є 220В (інвертовано)
         setPower(state.power === true);
       } catch(e) {}
     }
 
     if (topic === 'chills/power') {
-      // ON від ESP32 = є живлення
-      setPower(msg === 'ON');
+      // ON від ESP32 = є живлення (після інверсії в прошивці)
+      setPower(msg === 'OFF');
       setTimeout(fetchHistory, 2000);
     }
   });

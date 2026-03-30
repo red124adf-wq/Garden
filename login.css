@@ -74,26 +74,6 @@ h1 {
   box-shadow: 0 0 40px #00000066;
 }
 
-.session-box {
-  width: 100%;
-  margin-top: 14px;
-  background: #0b1220;
-  border: 1px dashed var(--border);
-  border-radius: 16px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-}
-
-.session-text {
-  font-size: 12px;
-  color: var(--dim);
-  letter-spacing: 1px;
-  text-align: center;
-}
-
 .form-group {
   display: flex;
   flex-direction: column;
@@ -155,14 +135,4 @@ h1 {
 .login-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-.login-btn.secondary {
-  border-color: var(--dim);
-  color: var(--dim);
-}
-
-.login-btn.secondary:hover:not(:disabled) {
-  background: #4a6a8a22;
-  box-shadow: none;
 }
