@@ -87,8 +87,15 @@ h1 {
 
 .sensors {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+
+@media (max-width: 360px) {
+  .sensors {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .sv {
